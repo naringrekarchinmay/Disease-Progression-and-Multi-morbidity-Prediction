@@ -1,0 +1,16 @@
+condition,events,patients
+hypertension,108405,55875
+obesity,95139,49313
+hyperlipidemia,84628,44422
+chronic_kidney_disease,45322,18636
+osteoarthritis,26682,14561
+type2_diabetes,27584,12969
+anxiety,23002,12108
+depression,18105,9988
+asthma,16183,8916
+coronary_artery_disease,17518,8267
+copd,14884,6997
+hypothyroidism,9956,5531
+heart_failure,4954,2363
+atrial_fibrillation,3989,2233
+type1_diabetes,1477,621

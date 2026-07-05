@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Environments and editors
+.DS_Store
+.env
+.venv/
+venv/
+.idea/
+.vscode/
+.claude/
+
+# Local agent handoff/config files (not for the public repo)
+PROMPT.md
+AGENTS.md
+
+# Large data files (raw and processed) — too big for git; see README for setup.
+# Rebuild processed data with: python run_pipeline.py --step features
+data/*.csv
+data/raw/
+data/processed/
+data/external/
+
+# Trained model artifacts (~140 MB) — regenerate with:
+# python run_pipeline.py --step models
+models/*.joblib
+
+# The small outputs under outputs/ (figures, tables, reports) ARE committed so
+# the repository is self-contained for review.
+

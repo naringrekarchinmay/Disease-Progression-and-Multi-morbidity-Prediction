@@ -1,0 +1,6 @@
+table,rows,columns,unique_patients
+patients,100000,28,100000
+diagnoses,274592,8,100000
+lab_results,2827722,10,100000
+medications,364174,10,94067
+outcomes,11001,12,11001

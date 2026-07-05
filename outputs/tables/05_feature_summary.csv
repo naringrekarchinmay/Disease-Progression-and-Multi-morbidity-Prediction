@@ -1,0 +1,2 @@
+rows,columns,future_hospitalization_rate,future_icu_admission_rate,future_30d_readmission_rate,multimorbidity_progression_rate,mean_baseline_condition_count
+100000,99,0.04549,0.00103,0.00684,0.18107,1.86707

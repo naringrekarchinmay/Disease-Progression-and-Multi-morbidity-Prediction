@@ -1,0 +1,6 @@
+table,date_column,min_date,max_date,missing_dates
+diagnoses,visit_date,2018-01-01,2024-12-30,0
+lab_results,test_date,2018-01-01,2024-12-30,0
+medications,start_date,2018-01-01,2021-07-01,0
+outcomes,admission_date,2018-01-01,2024-12-30,0
+outcomes,discharge_date,2018-01-03,2025-01-10,0
