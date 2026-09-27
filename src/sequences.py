@@ -2,18 +2,31 @@
 
 Each patient becomes one time-ordered stream of events built from the five raw
 tables, using only events on or before the cutoff date.
+
+Build and save (a sample first, then everything):
+    python -m src.sequences --sample 5000
+    python -m src.sequences
 """
 
 from __future__ import annotations
 
+import argparse
+import time
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 
+from src.data_cleaning import clean_all, load_raw_data
 from src.features import TARGET_COLUMNS, build_patient_features
 
 EVENT_COLUMNS = ["patient_id", "date", "event_type", "token", "days_since_prev", "age_at_event"]
 # Same-day events are ordered by type, then token, so the stream is deterministic.
 EVENT_TYPE_ORDER = {"diagnosis": 0, "lab": 1, "medication": 2, "admission": 3}
+# Reserved token ids: 0 pads short sequences, 1 stands in for tokens unseen in training.
+PAD_ID, UNK_ID = 0, 1
+PROCESSED_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"
+RANDOM_STATE = 42
 
 
 def _diagnosis_events(diagnoses: pd.DataFrame) -> pd.DataFrame:
@@ -105,6 +118,14 @@ def build_sequences(
     return events.reset_index(drop=True)[EVENT_COLUMNS]
 
 
+
+def build_vocabulary(events: pd.DataFrame) -> pd.DataFrame:
+    """Map each token to an integer id, most frequent first, after the reserved ids."""
+    counts = events["token"].value_counts().rename_axis("token").reset_index(name="count")
+    counts = counts.sort_values(["count", "token"], ascending=[False, True], kind="stable").reset_index(drop=True)
+    counts.insert(1, "token_id", range(UNK_ID + 1, UNK_ID + 1 + len(counts)))
+    return counts
+
 def build_targets(
     data: dict[str, pd.DataFrame],
     cutoff_date: str = "2021-12-31",
@@ -125,3 +146,60 @@ def build_targets(
         horizon_end=horizon_end,
     )
     return features[["patient_id", *TARGET_COLUMNS]]
+
+
+def save_sequences(
+    events: pd.DataFrame,
+    vocabulary: pd.DataFrame,
+    targets: pd.DataFrame,
+    out_dir: Path | str = PROCESSED_DIR,
+    suffix: str = "",
+) -> dict[str, Path]:
+    """Write the event stream (with token ids), vocabulary, and targets to `out_dir`."""
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    paths = {
+        "sequences": out_dir / f"sequences{suffix}.parquet",
+        "vocabulary": out_dir / f"sequences_vocab{suffix}.csv",
+        "targets": out_dir / f"sequence_targets{suffix}.parquet",
+    }
+    token_ids = events["token"].map(vocabulary.set_index("token")["token_id"])
+    events.assign(token_id=token_ids.fillna(UNK_ID).astype(int)).to_parquet(paths["sequences"], index=False)
+    vocabulary.to_csv(paths["vocabulary"], index=False)
+    targets.to_parquet(paths["targets"], index=False)
+    return paths
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Build per-patient event sequences.")
+    parser.add_argument("--sample", type=int, default=None, help="Build for a random sample of N patients.")
+    args = parser.parse_args()
+
+    start = time.perf_counter()
+    raw = load_raw_data()
+    if args.sample is not None:
+        ids = set(raw["patients"]["patient_id"].sample(args.sample, random_state=RANDOM_STATE))
+        raw = {name: table[table["patient_id"].isin(ids)] for name, table in raw.items()}
+    data = clean_all(raw)
+    loaded = time.perf_counter()
+
+    events = build_sequences(data)
+    vocabulary = build_vocabulary(events)
+    targets = build_targets(data)
+    built = time.perf_counter()
+
+    suffix = f"_sample{args.sample}" if args.sample is not None else ""
+    paths = save_sequences(events, vocabulary, targets, suffix=suffix)
+    done = time.perf_counter()
+
+    per_patient = events.groupby("patient_id").size()
+    print(f"Patients: {len(targets):,} | with input events: {per_patient.size:,}")
+    print(f"Events: {len(events):,} | per patient median {per_patient.median():.0f}, max {per_patient.max()}")
+    print(f"Vocabulary: {len(vocabulary)} tokens (+ PAD and UNK)")
+    print(f"Runtime: load {loaded - start:.1f}s, build {built - loaded:.1f}s, save {done - built:.1f}s, total {done - start:.1f}s")
+    for name, path in paths.items():
+        print(f"  {name}: {path}")
+
+
+if __name__ == "__main__":
+    main()

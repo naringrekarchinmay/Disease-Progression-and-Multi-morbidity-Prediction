@@ -20,7 +20,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.data_cleaning import clean_all, load_raw_data
 from src.features import TARGET_COLUMNS
-from src.sequences import build_sequences, build_targets
+from src.sequences import (
+    PAD_ID,
+    UNK_ID,
+    build_sequences,
+    build_targets,
+    build_vocabulary,
+    save_sequences,
+)
 
 CUTOFF = pd.Timestamp("2021-12-31")
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -144,6 +151,27 @@ def test_targets_one_row_per_patient_from_post_cutoff_events():
     assert targets.loc["p1", "future_icu_admission"] == 1
     assert targets.loc["p2", "future_hospitalization"] == 0
 
+
+
+def test_vocabulary_covers_every_token_with_reserved_ids(fake_events):
+    vocab = build_vocabulary(fake_events)
+    assert set(vocab["token"]) == set(fake_events["token"])
+    assert vocab["token_id"].is_unique
+    assert {PAD_ID, UNK_ID}.isdisjoint(vocab["token_id"])
+    # Most frequent token first; counts match the events.
+    assert vocab["count"].is_monotonic_decreasing
+    assert vocab["count"].sum() == len(fake_events)
+
+
+def test_saved_sequences_round_trip_with_token_ids(fake_events, tmp_path):
+    data = make_fake_raw_data()
+    paths = save_sequences(fake_events, build_vocabulary(fake_events), build_targets(data), tmp_path)
+    saved = pd.read_parquet(paths["sequences"])
+    vocab = pd.read_csv(paths["vocabulary"])
+    targets = pd.read_parquet(paths["targets"])
+    pd.testing.assert_frame_equal(saved.drop(columns="token_id"), fake_events)
+    assert (saved["token"].map(vocab.set_index("token")["token_id"]) == saved["token_id"]).all()
+    assert len(targets) == len(data["patients"])
 
 @pytest.fixture(scope="module")
 def real_sample():
