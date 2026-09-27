@@ -28,6 +28,7 @@ data/external/
 # Trained model artifacts (~140 MB) — regenerate with:
 # python run_pipeline.py --step models
 models/*.joblib
+models/*.pt
 
 # The small outputs under outputs/ (figures, tables, reports) ARE committed so
 # the repository is self-contained for review.

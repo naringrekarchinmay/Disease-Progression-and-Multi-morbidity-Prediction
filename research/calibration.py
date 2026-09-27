@@ -34,6 +34,21 @@ from src.modeling import load_model, make_advanced_models, save_model
 
 VALIDATION_SIZE = 0.2
 RESULTS_LOG = Path(__file__).resolve().parent / "results_log.csv"
+LOG_METRICS = ["brier", "brier_skill_score", "roc_auc", "average_precision", "calibration_slope"]
+LOG_COLUMNS = ["date", "task", "model", "target", "metric", "value", "seed", "notes"]
+
+
+def baseline_predictions_path(target: str) -> Path:
+    """Test-split predictions of the calibrated baseline, read by the torch models."""
+    return rp.PROJECT_ROOT / "data" / "processed" / f"baseline_test_predictions_{target}.parquet"
+
+
+def write_results(table: pd.DataFrame, task: str, seed: int, notes: str) -> None:
+    """Replace this task's rows in the results log with `table` (one row per model and target)."""
+    log = table.melt(id_vars=["target", "model"], value_vars=LOG_METRICS, var_name="metric", value_name="value")
+    log = log.assign(date=dt.date.today().isoformat(), task=task, seed=seed, notes=notes)[LOG_COLUMNS]
+    existing = pd.read_csv(RESULTS_LOG, dtype={"task": str})
+    pd.concat([existing[existing["task"] != task], log], ignore_index=True).to_csv(RESULTS_LOG, index=False)
 
 
 def calibration_splits(
@@ -93,7 +108,9 @@ def score_metrics(y_true: pd.Series, y_score: np.ndarray) -> dict[str, float]:
     }
 
 
-def plot_before_after(y_true: pd.Series, scores: dict[str, np.ndarray], target: str, path: Path) -> None:
+def plot_before_after(
+    y_true: pd.Series, scores: dict[str, np.ndarray], target: str, path: Path, title: str | None = None
+) -> None:
     fig, ax = plt.subplots(figsize=(6, 5))
     ax.plot([0, 1], [0, 1], linestyle="--", color="gray", linewidth=1, label="Perfectly calibrated")
     for (name, y_score), color in zip(scores.items(), ["#C44E52", "#DD8452", "#4C72B0"]):
@@ -102,7 +119,7 @@ def plot_before_after(y_true: pd.Series, scores: dict[str, np.ndarray], target: 
                 label=f"{name} (Brier {brier_score_loss(y_true, y_score):.3f})")
     ax.set_xlabel("Mean predicted risk (test-set deciles)")
     ax.set_ylabel("Observed frequency")
-    ax.set_title(f"Calibration before and after: {target}")
+    ax.set_title(title or f"Calibration before and after: {target}")
     ax.legend(loc="upper left", fontsize=8)
     fig.tight_layout()
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -127,6 +144,9 @@ def main() -> None:
             "refit + isotonic": calibrated.predict_proba(X_test)[:, 1],
         }
         plot_before_after(y_test, scores, target, rp.FIGURES_DIR / f"calibration_before_after_{target}.png")
+        pd.DataFrame(
+            {"patient_id": features.loc[X_test.index, "patient_id"], "y_true": y_test, "y_score": scores["refit + isotonic"]}
+        ).to_parquet(baseline_predictions_path(target), index=False)
         for model, y_score in scores.items():
             rows.append({"target": target, "model": model, **score_metrics(y_test, y_score)})
         sizes = {name: len(split[1]) for name, split in splits.items()}
@@ -136,15 +156,8 @@ def main() -> None:
     rp.save_metrics(table, rp.TABLES_DIR / "calibration_before_after.csv")
     print(table.round(4).to_string(index=False))
 
-    today = dt.date.today().isoformat()
-    log = table.melt(id_vars=["target", "model"], var_name="metric", value_name="value")
-    log = log[log["metric"].isin(["brier", "brier_skill_score", "roc_auc", "average_precision", "calibration_slope"])]
-    log = log.assign(date=today, task="6", seed=seed,
-                     notes="test split of run_pipeline; isotonic fitted on 20% validation carved from train")
-    log[["date", "task", "model", "target", "metric", "value", "seed", "notes"]].to_csv(
-        RESULTS_LOG, mode="a", header=False, index=False
-    )
-
+    write_results(table, task="6", seed=seed,
+                  notes="test split of run_pipeline; isotonic fitted on 20% validation carved from train")
 
 if __name__ == "__main__":
     main()
