@@ -43,9 +43,11 @@ def baseline_predictions_path(target: str) -> Path:
     return rp.PROJECT_ROOT / "data" / "processed" / f"baseline_test_predictions_{target}.parquet"
 
 
-def write_results(table: pd.DataFrame, task: str, seed: int, notes: str) -> None:
+def write_results(
+    table: pd.DataFrame, task: str, seed: int, notes: str, metrics: list[str] = LOG_METRICS
+) -> None:
     """Replace this task's rows in the results log with `table` (one row per model and target)."""
-    log = table.melt(id_vars=["target", "model"], value_vars=LOG_METRICS, var_name="metric", value_name="value")
+    log = table.melt(id_vars=["target", "model"], value_vars=metrics, var_name="metric", value_name="value")
     log = log.assign(date=dt.date.today().isoformat(), task=task, seed=seed, notes=notes)[LOG_COLUMNS]
     existing = pd.read_csv(RESULTS_LOG, dtype={"task": str})
     pd.concat([existing[existing["task"] != task], log], ignore_index=True).to_csv(RESULTS_LOG, index=False)

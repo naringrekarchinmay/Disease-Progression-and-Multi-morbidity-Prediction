@@ -1,0 +1,2 @@
+target,model,auroc_deterministic,auroc_mc_mean,mean_std,mean_std_progressed,mean_std_not_progressed,spearman_std_vs_abs_error,spearman_std_vs_lab_visits,spearman_std_vs_risk_margin,auroc_most_certain_80pct,auroc_most_certain_50pct,auroc_margin_most_certain_50pct,spearman_std_vs_abs_error_within_risk_deciles
+multimorbidity_progression,GRU MC dropout (30 passes),0.8539918408128884,0.8540870362071574,0.036702536,0.042933863,0.03191076,0.47250121253676836,-0.01696982640874226,0.4009114006465597,0.8680323559945651,0.8997703390493546,0.9397652360910238,0.24502407144474683

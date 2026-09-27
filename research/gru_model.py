@@ -159,6 +159,22 @@ def static_features(features: pd.DataFrame, ids: list[str], age_mean: float, age
     return np.column_stack([(rows["age"] - age_mean) / age_std, (rows["sex"] == "M").astype(float)]).astype(np.float32)
 
 
+def split_tensors(
+    features: pd.DataFrame,
+    events: pd.DataFrame,
+    ids: list[str],
+    token_to_id: dict[str, int],
+    vocab_size: int,
+    age_mean: float,
+    age_std: float,
+) -> dict[str, torch.Tensor]:
+    """Model inputs for one split, padded to the training vocabulary width."""
+    encoded = encode_patients(events, ids, token_to_id)
+    tensors = to_tensors(encoded, static_features(features, ids, age_mean, age_std))
+    tensors["counts"] = nn.functional.pad(tensors["counts"], (0, vocab_size - tensors["counts"].shape[2]))
+    return tensors
+
+
 def predict_proba(model: TimeDecayGRU, tensors: dict[str, torch.Tensor], batch_size: int = 1024) -> np.ndarray:
     model.eval()
     with torch.no_grad():
@@ -231,13 +247,11 @@ def main() -> None:
 
     fit_rows = features.set_index("patient_id").loc[fit_ids]
     age_mean, age_std = float(fit_rows["age"].mean()), float(fit_rows["age"].std())
-    tensors = {}
-    for name, (ids, _) in splits.items():
-        encoded = encode_patients(events, ids, token_to_id)
-        tensors[name] = to_tensors(encoded, static_features(features, ids, age_mean, age_std))
-    vocab_size = max(t["counts"].shape[2] for t in tensors.values())
-    for t in tensors.values():  # every split shares the fit vocabulary width
-        t["counts"] = nn.functional.pad(t["counts"], (0, vocab_size - t["counts"].shape[2]))
+    vocab_size = max(token_to_id.values()) + 1
+    tensors = {
+        name: split_tensors(features, events, ids, token_to_id, vocab_size, age_mean, age_std)
+        for name, (ids, _) in splits.items()
+    }
     sizes = {name: len(ids) for name, (ids, _) in splits.items()}
     print(f"Splits {sizes} | vocabulary {len(token_to_id)} tokens | prep {time.perf_counter() - start:.1f}s")
 
