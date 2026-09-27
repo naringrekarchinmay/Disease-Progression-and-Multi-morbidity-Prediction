@@ -1,1 +1,31 @@
 date,task,model,target,metric,value,seed,notes
+2026-09-27,6,original XGBoost,future_hospitalization,brier,0.21143917739391327,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit XGBoost (80% of train),future_hospitalization,brier,0.20876392722129822,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit + isotonic,future_hospitalization,brier,0.04258003379786705,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,original XGBoost,multimorbidity_progression,brier,0.1447495073080063,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit XGBoost (80% of train),multimorbidity_progression,brier,0.14471860229969025,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit + isotonic,multimorbidity_progression,brier,0.14345490508122147,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,original XGBoost,future_hospitalization,brier_skill_score,-3.870572046625867,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit XGBoost (80% of train),future_hospitalization,brier_skill_score,-3.8089467656865885,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit + isotonic,future_hospitalization,brier_skill_score,0.019154704835481096,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,original XGBoost,multimorbidity_progression,brier_skill_score,0.4109560353799111,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit XGBoost (80% of train),multimorbidity_progression,brier_skill_score,0.4110818002889851,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit + isotonic,multimorbidity_progression,brier_skill_score,0.4162242925398383,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,original XGBoost,future_hospitalization,roc_auc,0.6944168726854787,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit XGBoost (80% of train),future_hospitalization,roc_auc,0.6957927639640102,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit + isotonic,future_hospitalization,roc_auc,0.6950523161917647,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,original XGBoost,multimorbidity_progression,roc_auc,0.8651656675653007,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit XGBoost (80% of train),multimorbidity_progression,roc_auc,0.8646266334949929,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit + isotonic,multimorbidity_progression,roc_auc,0.8639943552170548,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,original XGBoost,future_hospitalization,average_precision,0.09008556934816314,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit XGBoost (80% of train),future_hospitalization,average_precision,0.08872327637730884,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit + isotonic,future_hospitalization,average_precision,0.08531128093836376,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,original XGBoost,multimorbidity_progression,average_precision,0.7774903048410767,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit XGBoost (80% of train),multimorbidity_progression,average_precision,0.7772328567619224,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit + isotonic,multimorbidity_progression,average_precision,0.7693804019821285,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,original XGBoost,future_hospitalization,calibration_slope,0.8910524249076843,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit XGBoost (80% of train),future_hospitalization,calibration_slope,0.8954062461853027,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit + isotonic,future_hospitalization,calibration_slope,0.7636412711778575,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,original XGBoost,multimorbidity_progression,calibration_slope,1.0153156518936157,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit XGBoost (80% of train),multimorbidity_progression,calibration_slope,1.0160783529281616,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-09-27,6,refit + isotonic,multimorbidity_progression,calibration_slope,0.8865060577618912,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
