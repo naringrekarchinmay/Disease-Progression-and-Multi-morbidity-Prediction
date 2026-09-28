@@ -17,6 +17,7 @@ venv/
 PROMPT.md
 AGENTS.md
 ISEM735_HANDOFF.md
+PROJECT_ROADMAP.md
 
 # Large data files (raw and processed) — too big for git; see README for setup.
 # Rebuild processed data with: python run_pipeline.py --step features
