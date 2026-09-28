@@ -1,0 +1,4 @@
+schedule,interval_days,patients_with_3plus_visits,follows_schedule_all_gaps,share_of_all_patients,run_of_2plus_near_gaps,run_of_3plus_near_gaps,visits_needed_for_full_schedule,patients_with_that_many_visits
+3-month,91,45538,82,0.00082,629,21,30,0
+6-month,182,45538,53,0.00053,491,22,16,0
+12-month,365,45538,52,0.00052,302,11,8,402
