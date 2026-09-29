@@ -1,0 +1,10 @@
+code,item,rate_usd,source
+36415,Blood draw (venipuncture),9.34,CMS CLFS CY2026 Q4 (26CLABQ4)
+85025,Complete blood count with differential,7.77,CMS CLFS CY2026 Q4 (26CLABQ4)
+80053,Comprehensive metabolic panel,10.56,CMS CLFS CY2026 Q4 (26CLABQ4)
+80061,Lipid panel,13.39,CMS CLFS CY2026 Q4 (26CLABQ4)
+83036,Hemoglobin A1c,9.71,CMS CLFS CY2026 Q4 (26CLABQ4)
+83880,Natriuretic peptide (BNP),39.26,CMS CLFS CY2026 Q4 (26CLABQ4)
+84484,Troponin quantitative,12.47,CMS CLFS CY2026 Q4 (26CLABQ4)
+84443,Thyroid stimulating hormone,16.80,CMS CLFS CY2026 Q4 (26CLABQ4)
+99213,Established-patient office visit (low complexity),95.19,CMS PFS RVU26D Oct 2026: 2.85 non-facility RVUs x $33.4009 (non-QP)
