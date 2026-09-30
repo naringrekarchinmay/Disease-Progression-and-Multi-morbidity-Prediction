@@ -8,6 +8,7 @@ Run with `pytest tests/`.
 
 from __future__ import annotations
 
+import subprocess
 import sys
 from pathlib import Path
 
@@ -18,7 +19,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import run_pipeline as rp
-from research.calibration import calibration_splits, fit_calibrated_xgboost
+from research.calibration import calibration_splits
 
 
 def make_fake_features(n: int = 400, seed: int = 0) -> pd.DataFrame:
@@ -60,14 +61,30 @@ def test_splits_are_disjoint_and_test_matches_pipeline(features, target):
     assert len(fit_idx | val_idx | test_idx) == len(rp.cohort_for_target(features, target))
 
 
-@pytest.mark.parametrize("target", rp.TARGETS)
-def test_calibrated_model_ignores_the_test_split(features, target):
-    splits = calibration_splits(features, target)
-    X_test, y_test = splits["test"]
-    poisoned = {**splits, "test": (X_test.assign(signal=-X_test["signal"]), 1 - y_test)}
+ISOLATION_SCRIPT = """
+import sys
+import numpy as np
+from research.calibration import calibration_splits, fit_calibrated_xgboost
+from tests.test_calibration import make_fake_features
 
-    _, calibrated = fit_calibrated_xgboost(splits)
-    _, calibrated_poisoned = fit_calibrated_xgboost(poisoned)
-    np.testing.assert_array_equal(
-        calibrated.predict_proba(X_test)[:, 1], calibrated_poisoned.predict_proba(X_test)[:, 1]
-    )
+splits = calibration_splits(make_fake_features(), sys.argv[1])
+X_test, y_test = splits["test"]
+poisoned = {**splits, "test": (X_test.assign(signal=-X_test["signal"]), 1 - y_test)}
+_, calibrated = fit_calibrated_xgboost(splits)
+_, calibrated_poisoned = fit_calibrated_xgboost(poisoned)
+np.testing.assert_array_equal(
+    calibrated.predict_proba(X_test)[:, 1], calibrated_poisoned.predict_proba(X_test)[:, 1]
+)
+"""
+
+
+@pytest.mark.parametrize("target", rp.TARGETS)
+def test_calibrated_model_ignores_the_test_split(target):
+    """Flipping every test label and feature must not change the calibrated predictions.
+
+    Runs in a fresh interpreter: it fits XGBoost, which must never share a process with
+    torch (see tests/conftest.py).
+    """
+    result = subprocess.run([sys.executable, "-c", ISOLATION_SCRIPT, target],
+                            cwd=Path(__file__).resolve().parents[1], capture_output=True, timeout=300)
+    assert result.returncode == 0, result.stderr.decode()[-800:]
