@@ -84,3 +84,30 @@ date,task,model,target,metric,value,seed,notes
 2026-09-28,11,lab panel + office visit (CMS 2026),cost model,lab_panel_mean,44.573461949156815,42,CMS CLFS CY2026 Q4 and PFS RVU26D Oct 2026 national rates; research/cost_inputs.csv
 2026-09-28,11,lab panel + office visit (CMS 2026),cost model,measurement_cost,139.7634619491568,42,CMS CLFS CY2026 Q4 and PFS RVU26D Oct 2026 national rates; research/cost_inputs.csv
 2026-09-28,11,lab panel + office visit (CMS 2026),cost model,observed_measurements_per_patient_year,0.36791,42,CMS CLFS CY2026 Q4 and PFS RVU26D Oct 2026 national rates; research/cost_inputs.csv
+2026-09-30,12,sex,multimorbidity_progression,monitoring_max_over_min,1.0027843179085674,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,age_band,multimorbidity_progression,monitoring_max_over_min,1.0106794881150643,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,insurance,multimorbidity_progression,monitoring_max_over_min,1.0119649012372263,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,sex,multimorbidity_progression,gru_auroc_range,0.008634561877094327,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,age_band,multimorbidity_progression,gru_auroc_range,0.17763984788933773,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,insurance,multimorbidity_progression,gru_auroc_range,0.019335907526869645,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,sex,multimorbidity_progression,gru_max_abs_calibration_gap,0.0038834808464336956,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,age_band,multimorbidity_progression,gru_max_abs_calibration_gap,0.014404999845810562,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,insurance,multimorbidity_progression,gru_max_abs_calibration_gap,0.019093759709673364,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,sex,multimorbidity_progression,xgb_auroc_range,0.007410339142848166,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,age_band,multimorbidity_progression,xgb_auroc_range,0.17828610706358272,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,insurance,multimorbidity_progression,xgb_auroc_range,0.02131258025962468,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,sex,multimorbidity_progression,xgb_max_abs_calibration_gap,0.0011065372761296932,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,age_band,multimorbidity_progression,xgb_max_abs_calibration_gap,0.007063073269624742,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,insurance,multimorbidity_progression,xgb_max_abs_calibration_gap,0.013274877999665369,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,sex,multimorbidity_progression,sd_min_ratio_at_25pct,0.9992481203007518,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,age_band,multimorbidity_progression,sd_min_ratio_at_25pct,0.7625178826895566,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,insurance,multimorbidity_progression,sd_min_ratio_at_25pct,0.8888888888888888,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,sex,multimorbidity_progression,sd_max_ratio_at_25pct,1.0011778563015312,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,age_band,multimorbidity_progression,sd_max_ratio_at_25pct,1.439921530161844,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,insurance,multimorbidity_progression,sd_max_ratio_at_25pct,1.0206896551724138,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,sex,multimorbidity_progression,margin_min_ratio_at_25pct,0.975187969924812,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,age_band,multimorbidity_progression,margin_min_ratio_at_25pct,0.6454144188327612,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,insurance,multimorbidity_progression,margin_min_ratio_at_25pct,0.9527896995708155,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,sex,multimorbidity_progression,margin_max_ratio_at_25pct,1.0263054574008637,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,age_band,multimorbidity_progression,margin_max_ratio_at_25pct,1.196150016594756,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-09-30,12,insurance,multimorbidity_progression,margin_max_ratio_at_25pct,1.0804597701149425,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
