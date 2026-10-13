@@ -30,7 +30,7 @@ from sklearn.pipeline import Pipeline
 
 import run_pipeline as rp
 from src.evaluation import predict_scores
-from src.modeling import load_model, make_advanced_models, save_model
+from src.modeling import make_advanced_models, save_model
 
 VALIDATION_SIZE = 0.2
 RESULTS_LOG = Path(__file__).resolve().parent / "results_log.csv"
@@ -131,7 +131,9 @@ def plot_before_after(
 
 def main() -> None:
     seed = rp.RANDOM_STATE
-    features = rp.load_feature_table()
+    from research.data import load_features
+
+    features = load_features()
     rows = []
     for target in rp.TARGETS:
         start = time.perf_counter()
@@ -141,7 +143,6 @@ def main() -> None:
         save_model(calibrated, rp.MODELS_DIR / f"{target}_xgboost_isotonic.joblib")
 
         scores = {
-            "original XGBoost": predict_scores(load_model(rp.MODELS_DIR / f"{target}_xgboost.joblib"), X_test),
             "refit XGBoost (80% of train)": predict_scores(base, X_test),
             "refit + isotonic": calibrated.predict_proba(X_test)[:, 1],
         }

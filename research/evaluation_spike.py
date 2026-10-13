@@ -120,7 +120,9 @@ def masking_effect() -> tuple[pd.DataFrame, pd.DataFrame]:
     model.load_state_dict(checkpoint["state_dict"])
     model.eval()
 
-    features = rp.load_feature_table()
+    from research.data import load_features
+
+    features = load_features()
     events = pd.read_parquet(SEQUENCES_PATH, columns=["patient_id", "date", "event_type", "token"])
     test_ids, y_test = sequence_splits(features)["test"]
     events = events[events["patient_id"].isin(set(test_ids))]

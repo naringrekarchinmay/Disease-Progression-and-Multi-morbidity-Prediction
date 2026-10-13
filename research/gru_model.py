@@ -43,7 +43,7 @@ from src.sequences import UNK_ID, build_vocabulary
 CUTOFF = pd.Timestamp("2021-12-31")
 WINDOW_START = pd.Timestamp("2018-01-01")
 TARGET = "multimorbidity_progression"
-SEQUENCES_PATH = rp.PROJECT_ROOT / "data" / "processed" / "sequences.parquet"
+from research.data import SEQUENCES_PATH, load_features  # leak-free data (see research/data.py)
 MODEL_PATH = rp.MODELS_DIR / f"{TARGET}_gru.pt"
 
 
@@ -239,7 +239,7 @@ def main() -> None:
     torch.set_num_threads(os.cpu_count() or 1)
     start = time.perf_counter()
 
-    features = rp.load_feature_table(args.sample)
+    features = load_features(args.sample)
     events = pd.read_parquet(SEQUENCES_PATH, columns=["patient_id", "date", "token"])
     splits = sequence_splits(features)
     fit_ids, y_fit = splits["fit"]

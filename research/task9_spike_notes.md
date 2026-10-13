@@ -1,6 +1,6 @@
 # Task 9 evaluation spike: notes
 
-Written 2026-09-27. Numbers come from `python -m research.evaluation_spike` (seed 42);
+Written 2026-09-27; section 2 updated 2026-10-12. Numbers come from `python -m research.evaluation_spike` (seed 42);
 tables are in `outputs/tables/spike_*.csv` and the figure is `outputs/figures/spike_masking_effect.png`.
 
 ## 1. Do real schedules appear in the data?
@@ -19,15 +19,19 @@ There are almost none, and no patient has enough visits for a full 3- or 6-month
 
 ## 2. How far does risk move when one lab visit is hidden?
 
+Updated 2026-10-12 for the leak-free data (`research/leak_notes.md`); the original numbers were roughly
+halved because the medication table carried the same information as the labs.
+
 GRU (Task 7), test split, 8,342 patients with at least one pre-cutoff lab visit.
 
 | Hidden visit | Median abs change | 90th pct | Share over 0.05 | Share crossing 0.5 | AUROC |
 |---|---|---|---|---|---|
-| Last | 0.013 | 0.057 | 12.8% | 3.1% | 0.853 (from 0.854) |
-| Random | 0.011 | 0.055 | 11.8% | 2.9% | 0.853 |
+| Last | 0.026 | 0.177 | 34.5% | 11.7% | 0.802 (from 0.821) |
+| Random | 0.026 | 0.177 | 34.7% | 11.8% | 0.803 |
 
-The median change is about a third of the model's own MC-dropout SD (0.036). One lab visit moves
-the prediction less than the model's noise, so masking can rank schedules only weakly here.
+The median change is about two thirds of the model's own MC-dropout SD (0.046). One lab visit moves a
+third of patients by more than 5 points and flips the decision for about one in nine, so on leak-free
+data masking can rank sparser schedules; it still cannot score denser ones or detection delay.
 
 ## 3. What would a small Delphi-style simulator take?
 

@@ -121,7 +121,9 @@ def main() -> None:
     torch.set_num_threads(os.cpu_count() or 1)
     start = time.perf_counter()
 
-    features = rp.load_feature_table(args.sample)
+    from research.data import load_features
+
+    features = load_features(args.sample)
     events = pd.read_parquet(SEQUENCES_PATH, columns=["patient_id", "date", "token"])
     splits = sequence_splits(features)
     fit_ids, y_fit = splits["fit"]

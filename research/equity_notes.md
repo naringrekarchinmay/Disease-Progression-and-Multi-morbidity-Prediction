@@ -1,6 +1,7 @@
 # Baseline equity audit (RQ4): notes
 
-Written 2026-09-30. Code: `research/equity.py` (seed 42, 200 bootstrap resamples). Tables:
+Written 2026-09-30, updated 2026-10-12 for the leak-free data (`research/leak_notes.md`). Code:
+`research/equity.py` (seed 42, 200 bootstrap resamples). Tables:
 `outputs/tables/equity_{monitoring,performance,measured_share}.csv`. Figure:
 `outputs/figures/equity_baseline.png`.
 
@@ -19,37 +20,37 @@ itself, which is still worth measuring but is a narrower claim.
 
 ## 2. Predictors are fair by sex and insurance, not by age
 
-| Subgroup | GRU AUROC | XGBoost AUROC | Progression rate |
-|---|---|---|---|
-| <50 | 0.916 | 0.929 | 19% |
-| 50-64 | 0.868 | 0.877 | 35% |
-| 65-79 | 0.827 | 0.838 | 49% |
-| 80+ | 0.739 | 0.750 | 63% |
+| Subgroup | GRU AUROC | XGBoost AUROC |
+|---|---|---|
+| <50 | 0.860 | 0.858 |
+| 50-64 | 0.820 | 0.823 |
+| 65-79 | 0.787 | 0.797 |
+| 80+ | 0.711 | 0.726 |
 
-AUROC differs by less than 0.01 between sexes and about 0.02 across insurance types, with
-overlapping intervals. Across age it falls by 0.18 for both models, so the gradient belongs to the
-data rather than to either model. Calibration holds in every subgroup (largest gap 1.9 points,
-the GRU under-predicting uninsured patients). The oldest patients are the most likely to progress
-and the hardest to rank.
+AUROC differs by less than 0.002 between sexes and at most 0.014 across insurance types. Across age it
+falls by 0.13 to 0.15 for both models, so the gradient belongs to the data rather than to either model.
+Calibration holds within 3.5 points in every subgroup; the GRU is the less well calibrated of the two
+(largest gap 3.5 points by age, 2.9 by insurance, against 1.0 and 1.8 for XGBoost). The oldest patients
+are the most likely to progress (63%, against 19% under 50) and the hardest to rank.
 
 ## 3. The uncertainty signal decides which age group is measured
 
-Share of each age band measured when the most uncertain patients are measured first, as a
-multiple of a fair share (1.0):
+Share of each age band measured when the most uncertain patients are measured first, as a multiple of
+a fair share (1.0), using the GRU's predictions:
 
 | Rule, budget | <50 | 50-64 | 65-79 | 80+ |
 |---|---|---|---|---|
-| Dropout SD, 10% | 2.63 | 0.97 | 0.31 | 0.56 |
-| Dropout SD, 25% | 1.44 | 1.12 | 0.76 | 0.82 |
-| Closeness to 50% risk, 10% | 0.51 | 0.97 | 1.03 | 1.32 |
-| Closeness to 50% risk, 25% | 0.65 | 0.94 | 1.10 | 1.20 |
+| Dropout SD, 10% | 3.28 | 0.41 | 0.02 | 0.87 |
+| Dropout SD, 25% | 1.94 | 0.92 | 0.37 | 1.02 |
+| Closeness to 50% risk, 10% | 0.53 | 0.59 | 1.44 | 1.25 |
+| Closeness to 50% risk, 25% | 0.59 | 0.99 | 1.07 | 1.22 |
 
-The two signals send tight budgets to opposite ends of the age range. A dropout-SD threshold rule,
-the direct analogue of the sensor-network rule in the proposal, would measure the youngest,
-lowest-risk patients most and the oldest, highest-risk and least accurately predicted patients
-least. Sex and insurance stay within about 10% of a fair share under both rules.
+The two signals send tight budgets to different age groups. A dropout-SD threshold rule, the direct
+analogue of the sensor-network rule in the proposal, would measure the youngest, lowest-risk patients
+three times as often as their share and almost never measure 65-79 year olds. Closeness to 50% risk
+favours the over-65s and under-measures the under-50s. Sex stays within 5% of a fair share under both
+rules; insurance within 8% under dropout SD and 22% under closeness to 50% risk.
 
-This is the failure mode RQ4 was written to catch, appearing before any policy is learned: the
-choice of uncertainty measure alone moves monitoring between age groups. The threshold controller
-in weeks 7 and 8 should report age-band selection rates beside its budget frontier, and the
-comparison between the two uncertainty signals belongs in the results.
+This is the failure mode RQ4 was written to catch, appearing before any policy is learned: the choice of
+uncertainty measure alone moves monitoring between age groups. The masking experiments
+(`research/scheduling_notes.md`) show the same effect inside a working controller.

@@ -1,195 +1,185 @@
 date,task,model,target,metric,value,seed,notes
-2026-09-27,6,original XGBoost,future_hospitalization,brier,0.2114391773939132,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit XGBoost (80% of train),future_hospitalization,brier,0.2087639272212982,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit + isotonic,future_hospitalization,brier,0.042580033797867,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,original XGBoost,multimorbidity_progression,brier,0.1447495073080063,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit XGBoost (80% of train),multimorbidity_progression,brier,0.1447186022996902,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit + isotonic,multimorbidity_progression,brier,0.1434549050812214,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,original XGBoost,future_hospitalization,brier_skill_score,-3.870572046625867,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit XGBoost (80% of train),future_hospitalization,brier_skill_score,-3.808946765686589,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit + isotonic,future_hospitalization,brier_skill_score,0.019154704835481,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,original XGBoost,multimorbidity_progression,brier_skill_score,0.4109560353799111,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit XGBoost (80% of train),multimorbidity_progression,brier_skill_score,0.4110818002889851,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit + isotonic,multimorbidity_progression,brier_skill_score,0.4162242925398383,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,original XGBoost,future_hospitalization,roc_auc,0.6944168726854787,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit XGBoost (80% of train),future_hospitalization,roc_auc,0.6957927639640102,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit + isotonic,future_hospitalization,roc_auc,0.6950523161917647,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,original XGBoost,multimorbidity_progression,roc_auc,0.8651656675653007,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit XGBoost (80% of train),multimorbidity_progression,roc_auc,0.8646266334949929,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit + isotonic,multimorbidity_progression,roc_auc,0.8639943552170548,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,original XGBoost,future_hospitalization,average_precision,0.0900855693481631,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit XGBoost (80% of train),future_hospitalization,average_precision,0.0887232763773088,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit + isotonic,future_hospitalization,average_precision,0.0853112809383637,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,original XGBoost,multimorbidity_progression,average_precision,0.7774903048410767,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit XGBoost (80% of train),multimorbidity_progression,average_precision,0.7772328567619224,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit + isotonic,multimorbidity_progression,average_precision,0.7693804019821285,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,original XGBoost,future_hospitalization,calibration_slope,0.8910524249076843,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit XGBoost (80% of train),future_hospitalization,calibration_slope,0.8954062461853027,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit + isotonic,future_hospitalization,calibration_slope,0.7636412711778575,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,original XGBoost,multimorbidity_progression,calibration_slope,1.0153156518936155,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit XGBoost (80% of train),multimorbidity_progression,calibration_slope,1.0160783529281616,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,6,refit + isotonic,multimorbidity_progression,calibration_slope,0.8865060577618912,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
-2026-09-27,7,GRU,multimorbidity_progression,brier,0.1502581238746643,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
-2026-09-27,7,GRU + isotonic,multimorbidity_progression,brier,0.1508421599864959,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
-2026-09-27,7,GRU,multimorbidity_progression,brier_skill_score,0.388539258961518,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
-2026-09-27,7,GRU + isotonic,multimorbidity_progression,brier_skill_score,0.3861625811185835,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
-2026-09-27,7,GRU,multimorbidity_progression,roc_auc,0.8539918408128884,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
-2026-09-27,7,GRU + isotonic,multimorbidity_progression,roc_auc,0.8534128824621303,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
-2026-09-27,7,GRU,multimorbidity_progression,average_precision,0.7595365300610867,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
-2026-09-27,7,GRU + isotonic,multimorbidity_progression,average_precision,0.7552628729114967,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
-2026-09-27,7,GRU,multimorbidity_progression,calibration_slope,0.9856520891189576,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
-2026-09-27,7,GRU + isotonic,multimorbidity_progression,calibration_slope,0.8922749161720276,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
-2026-09-27,8,GRU MC dropout (30 passes),multimorbidity_progression,auroc_deterministic,0.8539918408128884,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
-2026-09-27,8,GRU MC dropout (30 passes),multimorbidity_progression,auroc_mc_mean,0.8540870362071574,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
-2026-09-27,8,GRU MC dropout (30 passes),multimorbidity_progression,mean_std,0.0367025360465049,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
-2026-09-27,8,GRU MC dropout (30 passes),multimorbidity_progression,mean_std_progressed,0.0429338626563549,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
-2026-09-27,8,GRU MC dropout (30 passes),multimorbidity_progression,mean_std_not_progressed,0.0319107584655284,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
-2026-09-27,8,GRU MC dropout (30 passes),multimorbidity_progression,spearman_std_vs_abs_error,0.4725012125367683,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
-2026-09-27,8,GRU MC dropout (30 passes),multimorbidity_progression,spearman_std_vs_lab_visits,-0.0169698264087422,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
-2026-09-27,8,GRU MC dropout (30 passes),multimorbidity_progression,spearman_std_vs_risk_margin,0.4009114006465597,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
-2026-09-27,8,GRU MC dropout (30 passes),multimorbidity_progression,auroc_most_certain_80pct,0.8680323559945651,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
-2026-09-27,8,GRU MC dropout (30 passes),multimorbidity_progression,auroc_most_certain_50pct,0.8997703390493546,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
-2026-09-27,8,GRU MC dropout (30 passes),multimorbidity_progression,auroc_margin_most_certain_50pct,0.9397652360910238,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
-2026-09-27,8,GRU MC dropout (30 passes),multimorbidity_progression,spearman_std_vs_abs_error_within_risk_deciles,0.2450240714447468,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
-2026-09-27,9,3-month,lab schedule support,follows_schedule_all_gaps,82.0,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,6-month,lab schedule support,follows_schedule_all_gaps,53.0,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,12-month,lab schedule support,follows_schedule_all_gaps,52.0,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,"GRU, hide last lab visit",multimorbidity_progression,follows_schedule_all_gaps,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,"GRU, hide random lab visit",multimorbidity_progression,follows_schedule_all_gaps,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,3-month,lab schedule support,run_of_2plus_near_gaps,629.0,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,6-month,lab schedule support,run_of_2plus_near_gaps,491.0,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,12-month,lab schedule support,run_of_2plus_near_gaps,302.0,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,"GRU, hide last lab visit",multimorbidity_progression,run_of_2plus_near_gaps,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,"GRU, hide random lab visit",multimorbidity_progression,run_of_2plus_near_gaps,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,3-month,lab schedule support,median_abs_change,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,6-month,lab schedule support,median_abs_change,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,12-month,lab schedule support,median_abs_change,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,"GRU, hide last lab visit",multimorbidity_progression,median_abs_change,0.0125474333763122,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,"GRU, hide random lab visit",multimorbidity_progression,median_abs_change,0.011348009109497,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,3-month,lab schedule support,p90_abs_change,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,6-month,lab schedule support,p90_abs_change,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,12-month,lab schedule support,p90_abs_change,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,"GRU, hide last lab visit",multimorbidity_progression,p90_abs_change,0.0572081118822097,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,"GRU, hide random lab visit",multimorbidity_progression,p90_abs_change,0.0550728857517242,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,3-month,lab schedule support,share_crossing_0.5,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,6-month,lab schedule support,share_crossing_0.5,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,12-month,lab schedule support,share_crossing_0.5,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,"GRU, hide last lab visit",multimorbidity_progression,share_crossing_0.5,0.031407336370175,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,"GRU, hide random lab visit",multimorbidity_progression,share_crossing_0.5,0.0292495804363462,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,3-month,lab schedule support,auroc_masked,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,6-month,lab schedule support,auroc_masked,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,12-month,lab schedule support,auroc_masked,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,"GRU, hide last lab visit",multimorbidity_progression,auroc_masked,0.8528539800586475,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
-2026-09-27,9,"GRU, hide random lab visit",multimorbidity_progression,auroc_masked,0.8533317581253509,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
 2026-09-28,11,lab panel + office visit (CMS 2026),cost model,lab_panel_mean,44.573461949156815,42,CMS CLFS CY2026 Q4 and PFS RVU26D Oct 2026 national rates; research/cost_inputs.csv
 2026-09-28,11,lab panel + office visit (CMS 2026),cost model,measurement_cost,139.7634619491568,42,CMS CLFS CY2026 Q4 and PFS RVU26D Oct 2026 national rates; research/cost_inputs.csv
 2026-09-28,11,lab panel + office visit (CMS 2026),cost model,observed_measurements_per_patient_year,0.36791,42,CMS CLFS CY2026 Q4 and PFS RVU26D Oct 2026 national rates; research/cost_inputs.csv
-2026-09-30,12,sex,multimorbidity_progression,monitoring_max_over_min,1.0027843179085674,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,age_band,multimorbidity_progression,monitoring_max_over_min,1.0106794881150645,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,insurance,multimorbidity_progression,monitoring_max_over_min,1.0119649012372265,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,sex,multimorbidity_progression,gru_auroc_range,0.0086345618770943,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,age_band,multimorbidity_progression,gru_auroc_range,0.1776398478893377,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,insurance,multimorbidity_progression,gru_auroc_range,0.0193359075268696,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,sex,multimorbidity_progression,gru_max_abs_calibration_gap,0.0038834808464336,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,age_band,multimorbidity_progression,gru_max_abs_calibration_gap,0.0144049998458105,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,insurance,multimorbidity_progression,gru_max_abs_calibration_gap,0.0190937597096733,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,sex,multimorbidity_progression,xgb_auroc_range,0.0074103391428481,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,age_band,multimorbidity_progression,xgb_auroc_range,0.1782861070635827,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,insurance,multimorbidity_progression,xgb_auroc_range,0.0213125802596246,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,sex,multimorbidity_progression,xgb_max_abs_calibration_gap,0.0011065372761296,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,age_band,multimorbidity_progression,xgb_max_abs_calibration_gap,0.0070630732696247,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,insurance,multimorbidity_progression,xgb_max_abs_calibration_gap,0.0132748779996653,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,sex,multimorbidity_progression,sd_min_ratio_at_25pct,0.9992481203007518,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,age_band,multimorbidity_progression,sd_min_ratio_at_25pct,0.7625178826895566,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,insurance,multimorbidity_progression,sd_min_ratio_at_25pct,0.8888888888888888,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,sex,multimorbidity_progression,sd_max_ratio_at_25pct,1.0011778563015312,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,age_band,multimorbidity_progression,sd_max_ratio_at_25pct,1.439921530161844,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,insurance,multimorbidity_progression,sd_max_ratio_at_25pct,1.0206896551724138,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,sex,multimorbidity_progression,margin_min_ratio_at_25pct,0.975187969924812,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,age_band,multimorbidity_progression,margin_min_ratio_at_25pct,0.6454144188327612,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,insurance,multimorbidity_progression,margin_min_ratio_at_25pct,0.9527896995708156,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,sex,multimorbidity_progression,margin_max_ratio_at_25pct,1.0263054574008637,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,age_band,multimorbidity_progression,margin_max_ratio_at_25pct,1.196150016594756,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,12,insurance,multimorbidity_progression,margin_max_ratio_at_25pct,1.0804597701149423,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
-2026-09-30,13,Transformer,multimorbidity_progression,brier,0.1553964763879776,42,"visit-day Transformer, 78,209 params, lr 0.0003 chosen on validation loss, fit split, early stop on validation, 14 epochs"
-2026-09-30,13,Transformer + isotonic,multimorbidity_progression,brier,0.1555188149213791,42,"visit-day Transformer, 78,209 params, lr 0.0003 chosen on validation loss, fit split, early stop on validation, 14 epochs"
-2026-09-30,13,Transformer,multimorbidity_progression,brier_skill_score,0.3676292358992823,42,"visit-day Transformer, 78,209 params, lr 0.0003 chosen on validation loss, fit split, early stop on validation, 14 epochs"
-2026-09-30,13,Transformer + isotonic,multimorbidity_progression,brier_skill_score,0.3671313912013568,42,"visit-day Transformer, 78,209 params, lr 0.0003 chosen on validation loss, fit split, early stop on validation, 14 epochs"
-2026-09-30,13,Transformer,multimorbidity_progression,roc_auc,0.8449811483476319,42,"visit-day Transformer, 78,209 params, lr 0.0003 chosen on validation loss, fit split, early stop on validation, 14 epochs"
-2026-09-30,13,Transformer + isotonic,multimorbidity_progression,roc_auc,0.8440849345540107,42,"visit-day Transformer, 78,209 params, lr 0.0003 chosen on validation loss, fit split, early stop on validation, 14 epochs"
-2026-09-30,13,Transformer,multimorbidity_progression,average_precision,0.7493772667031344,42,"visit-day Transformer, 78,209 params, lr 0.0003 chosen on validation loss, fit split, early stop on validation, 14 epochs"
-2026-09-30,13,Transformer + isotonic,multimorbidity_progression,average_precision,0.743557032681004,42,"visit-day Transformer, 78,209 params, lr 0.0003 chosen on validation loss, fit split, early stop on validation, 14 epochs"
-2026-09-30,13,Transformer,multimorbidity_progression,calibration_slope,0.9382004737854004,42,"visit-day Transformer, 78,209 params, lr 0.0003 chosen on validation loss, fit split, early stop on validation, 14 epochs"
-2026-09-30,13,Transformer + isotonic,multimorbidity_progression,calibration_slope,0.8935575485229492,42,"visit-day Transformer, 78,209 params, lr 0.0003 chosen on validation loss, fit split, early stop on validation, 14 epochs"
-2026-10-05,14,keep all (observed) ,multimorbidity_progression,share_of_observed,1.0,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,keep none ,multimorbidity_progression,share_of_observed,0.0,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,fixed interval 6-month,multimorbidity_progression,share_of_observed,0.8790752815649081,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,fixed interval 12-month,multimorbidity_progression,share_of_observed,0.781005071461503,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.02,multimorbidity_progression,share_of_observed,0.03385365211091352,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.02,multimorbidity_progression,share_of_observed,0.03385365211091352,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.05,multimorbidity_progression,share_of_observed,0.09918988342224856,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.05,multimorbidity_progression,share_of_observed,0.09918988342224856,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.1,multimorbidity_progression,share_of_observed,0.21392346703550022,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.1,multimorbidity_progression,share_of_observed,0.21392346703550022,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.15,multimorbidity_progression,share_of_observed,0.23368240795626688,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.15,multimorbidity_progression,share_of_observed,0.23368240795626688,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.2,multimorbidity_progression,share_of_observed,0.2824869920305605,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.2,multimorbidity_progression,share_of_observed,0.2824869920305605,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.3,multimorbidity_progression,share_of_observed,0.5079365079365079,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.3,multimorbidity_progression,share_of_observed,0.5079365079365079,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.4,multimorbidity_progression,share_of_observed,0.5535137983270764,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.4,multimorbidity_progression,share_of_observed,0.5535137983270764,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,keep all (observed) ,multimorbidity_progression,spend_per_patient_year,50.941728509075475,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,keep none ,multimorbidity_progression,spend_per_patient_year,0.0,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,fixed interval 6-month,multimorbidity_progression,spend_per_patient_year,44.78161433251862,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,fixed interval 12-month,multimorbidity_progression,spend_per_patient_year,39.78574831460297,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.02,multimorbidity_progression,spend_per_patient_year,1.7245635548748464,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.02,multimorbidity_progression,spend_per_patient_year,1.7245635548748464,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.05,multimorbidity_progression,spend_per_patient_year,5.052904112143032,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.05,multimorbidity_progression,spend_per_patient_year,5.052904112143032,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.1,multimorbidity_progression,spend_per_patient_year,10.897631179442609,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.1,multimorbidity_progression,spend_per_patient_year,10.897631179442609,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.15,multimorbidity_progression,spend_per_patient_year,11.904185783455166,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.15,multimorbidity_progression,spend_per_patient_year,11.904185783455166,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.2,multimorbidity_progression,spend_per_patient_year,14.39037565536618,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.2,multimorbidity_progression,spend_per_patient_year,14.39037565536618,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.3,multimorbidity_progression,spend_per_patient_year,25.875163687149445,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.3,multimorbidity_progression,spend_per_patient_year,25.875163687149445,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.4,multimorbidity_progression,spend_per_patient_year,28.196949640405077,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.4,multimorbidity_progression,spend_per_patient_year,28.196949640405073,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,keep all (observed) ,multimorbidity_progression,roc_auc,0.8639943552170548,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,keep none ,multimorbidity_progression,roc_auc,0.8640832467775683,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,fixed interval 6-month,multimorbidity_progression,roc_auc,0.8641992110526918,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,fixed interval 12-month,multimorbidity_progression,roc_auc,0.8646279655551019,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.02,multimorbidity_progression,roc_auc,0.8638982029908764,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.02,multimorbidity_progression,roc_auc,0.8640710481087955,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.05,multimorbidity_progression,roc_auc,0.8637586556234005,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.05,multimorbidity_progression,roc_auc,0.8640815845166436,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.1,multimorbidity_progression,roc_auc,0.8638878654539742,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.1,multimorbidity_progression,roc_auc,0.8641820180965807,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.15,multimorbidity_progression,roc_auc,0.8639236997470475,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.15,multimorbidity_progression,roc_auc,0.8642246140018127,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.2,multimorbidity_progression,roc_auc,0.8638181668158762,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.2,multimorbidity_progression,roc_auc,0.864285971317031,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.3,multimorbidity_progression,roc_auc,0.8643254378190776,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.3,multimorbidity_progression,roc_auc,0.8640066889679794,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.4,multimorbidity_progression,roc_auc,0.8640654234380817,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.4,multimorbidity_progression,roc_auc,0.8640081110828565,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,keep all (observed) ,multimorbidity_progression,brier,0.14345490508122147,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,keep none ,multimorbidity_progression,brier,0.14357114272008006,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,fixed interval 6-month,multimorbidity_progression,brier,0.14353704353057292,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,fixed interval 12-month,multimorbidity_progression,brier,0.14361484753183196,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.02,multimorbidity_progression,brier,0.14359263846455836,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.02,multimorbidity_progression,brier,0.14357070325490134,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.05,multimorbidity_progression,brier,0.14364523347352642,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.05,multimorbidity_progression,brier,0.14356389438177658,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.1,multimorbidity_progression,brier,0.14362045154511355,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.1,multimorbidity_progression,brier,0.14357378125502482,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.15,multimorbidity_progression,brier,0.14352058061876496,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.15,multimorbidity_progression,brier,0.14355098692567253,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.2,multimorbidity_progression,brier,0.14347963561873428,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.2,multimorbidity_progression,brier,0.14358264922274563,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.3,multimorbidity_progression,brier,0.14338153994424627,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.3,multimorbidity_progression,brier,0.14356726317863566,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,threshold tau=0.4,multimorbidity_progression,brier,0.14356647976551137,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-05,14,random (matched) matched to tau=0.4,multimorbidity_progression,brier,0.14357678281758252,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,6,refit XGBoost (80% of train),future_hospitalization,brier,0.2086949348449707,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,6,refit + isotonic,future_hospitalization,brier,0.0426650425086359,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,6,refit XGBoost (80% of train),multimorbidity_progression,brier,0.1677950918674469,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,6,refit + isotonic,multimorbidity_progression,brier,0.1669531273433016,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,6,refit XGBoost (80% of train),future_hospitalization,brier_skill_score,-3.807357503262695,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,6,refit + isotonic,future_hospitalization,brier_skill_score,0.0171965008001944,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,6,refit XGBoost (80% of train),multimorbidity_progression,brier_skill_score,0.3171742826932161,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,6,refit + isotonic,multimorbidity_progression,brier_skill_score,0.3206005749866791,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,6,refit XGBoost (80% of train),future_hospitalization,roc_auc,0.6961080900424297,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,6,refit + isotonic,future_hospitalization,roc_auc,0.6934410775140458,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,6,refit XGBoost (80% of train),multimorbidity_progression,roc_auc,0.8285691171657182,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,6,refit + isotonic,multimorbidity_progression,roc_auc,0.8276020602879899,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,6,refit XGBoost (80% of train),future_hospitalization,average_precision,0.0877779682185417,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,6,refit + isotonic,future_hospitalization,average_precision,0.0829373111415275,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,6,refit XGBoost (80% of train),multimorbidity_progression,average_precision,0.7453598811196278,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,6,refit + isotonic,multimorbidity_progression,average_precision,0.7362483634597832,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,6,refit XGBoost (80% of train),future_hospitalization,calibration_slope,0.8945165872573853,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,6,refit + isotonic,future_hospitalization,calibration_slope,0.7681422202567691,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,6,refit XGBoost (80% of train),multimorbidity_progression,calibration_slope,1.0322411060333252,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,6,refit + isotonic,multimorbidity_progression,calibration_slope,0.8863243867100347,42,test split of run_pipeline; isotonic fitted on 20% validation carved from train
+2026-10-12,7,GRU,multimorbidity_progression,brier,0.170151948928833,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
+2026-10-12,7,GRU + isotonic,multimorbidity_progression,brier,0.1706344187259674,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
+2026-10-12,7,GRU,multimorbidity_progression,brier_skill_score,0.3075832833640948,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
+2026-10-12,7,GRU + isotonic,multimorbidity_progression,brier_skill_score,0.3056199197064295,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
+2026-10-12,7,GRU,multimorbidity_progression,roc_auc,0.8207398306872803,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
+2026-10-12,7,GRU + isotonic,multimorbidity_progression,roc_auc,0.819371992569431,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
+2026-10-12,7,GRU,multimorbidity_progression,average_precision,0.732123059163042,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
+2026-10-12,7,GRU + isotonic,multimorbidity_progression,average_precision,0.7238472846676044,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
+2026-10-12,7,GRU,multimorbidity_progression,calibration_slope,0.9987855553627014,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
+2026-10-12,7,GRU + isotonic,multimorbidity_progression,calibration_slope,0.8825612664222717,42,"time-decay GRU, fit split, early stop on validation, 35 epochs"
+2026-10-12,8,GRU MC dropout (30 passes),multimorbidity_progression,auroc_deterministic,0.8207398306872803,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
+2026-10-12,8,GRU MC dropout (30 passes),multimorbidity_progression,auroc_mc_mean,0.8206415584217737,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
+2026-10-12,8,GRU MC dropout (30 passes),multimorbidity_progression,mean_std,0.0462086014449596,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
+2026-10-12,8,GRU MC dropout (30 passes),multimorbidity_progression,mean_std_progressed,0.046034637838602,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
+2026-10-12,8,GRU MC dropout (30 passes),multimorbidity_progression,mean_std_not_progressed,0.0463423766195774,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
+2026-10-12,8,GRU MC dropout (30 passes),multimorbidity_progression,spearman_std_vs_abs_error,0.2986486242658723,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
+2026-10-12,8,GRU MC dropout (30 passes),multimorbidity_progression,spearman_std_vs_lab_visits,-0.0538133064079411,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
+2026-10-12,8,GRU MC dropout (30 passes),multimorbidity_progression,spearman_std_vs_risk_margin,0.2917572710583991,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
+2026-10-12,8,GRU MC dropout (30 passes),multimorbidity_progression,auroc_most_certain_80pct,0.834529814049546,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
+2026-10-12,8,GRU MC dropout (30 passes),multimorbidity_progression,auroc_most_certain_50pct,0.8482777533289504,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
+2026-10-12,8,GRU MC dropout (30 passes),multimorbidity_progression,auroc_margin_most_certain_50pct,0.9012821434808962,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
+2026-10-12,8,GRU MC dropout (30 passes),multimorbidity_progression,spearman_std_vs_abs_error_within_risk_deciles,0.1458380311052098,42,"MC dropout, 30 passes, test split; uncertainty = SD of predicted risk"
+2026-10-12,13,Transformer,multimorbidity_progression,brier,0.1740953177213668,42,"visit-day Transformer, 78,209 params, lr 0.001 chosen on validation loss, fit split, early stop on validation, 15 epochs"
+2026-10-12,13,Transformer + isotonic,multimorbidity_progression,brier,0.1740819066762924,42,"visit-day Transformer, 78,209 params, lr 0.001 chosen on validation loss, fit split, early stop on validation, 15 epochs"
+2026-10-12,13,Transformer,multimorbidity_progression,brier_skill_score,0.2915361296935082,42,"visit-day Transformer, 78,209 params, lr 0.001 chosen on validation loss, fit split, early stop on validation, 15 epochs"
+2026-10-12,13,Transformer + isotonic,multimorbidity_progression,brier_skill_score,0.2915907046299433,42,"visit-day Transformer, 78,209 params, lr 0.001 chosen on validation loss, fit split, early stop on validation, 15 epochs"
+2026-10-12,13,Transformer,multimorbidity_progression,roc_auc,0.8134848872527438,42,"visit-day Transformer, 78,209 params, lr 0.001 chosen on validation loss, fit split, early stop on validation, 15 epochs"
+2026-10-12,13,Transformer + isotonic,multimorbidity_progression,roc_auc,0.8125407943408383,42,"visit-day Transformer, 78,209 params, lr 0.001 chosen on validation loss, fit split, early stop on validation, 15 epochs"
+2026-10-12,13,Transformer,multimorbidity_progression,average_precision,0.7274545386682608,42,"visit-day Transformer, 78,209 params, lr 0.001 chosen on validation loss, fit split, early stop on validation, 15 epochs"
+2026-10-12,13,Transformer + isotonic,multimorbidity_progression,average_precision,0.720546937945418,42,"visit-day Transformer, 78,209 params, lr 0.001 chosen on validation loss, fit split, early stop on validation, 15 epochs"
+2026-10-12,13,Transformer,multimorbidity_progression,calibration_slope,0.9850502014160156,42,"visit-day Transformer, 78,209 params, lr 0.001 chosen on validation loss, fit split, early stop on validation, 15 epochs"
+2026-10-12,13,Transformer + isotonic,multimorbidity_progression,calibration_slope,0.8849659562110901,42,"visit-day Transformer, 78,209 params, lr 0.001 chosen on validation loss, fit split, early stop on validation, 15 epochs"
+2026-10-12,12,sex,multimorbidity_progression,monitoring_max_over_min,1.0027843179085674,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,age_band,multimorbidity_progression,monitoring_max_over_min,1.0106794881150645,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,insurance,multimorbidity_progression,monitoring_max_over_min,1.0119649012372265,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,sex,multimorbidity_progression,gru_auroc_range,0.0018486622007278,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,age_band,multimorbidity_progression,gru_auroc_range,0.1487720076113127,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,insurance,multimorbidity_progression,gru_auroc_range,0.006042275974911,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,sex,multimorbidity_progression,gru_max_abs_calibration_gap,0.0099666414852429,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,age_band,multimorbidity_progression,gru_max_abs_calibration_gap,0.0352650161917883,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,insurance,multimorbidity_progression,gru_max_abs_calibration_gap,0.0286045450509361,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,sex,multimorbidity_progression,xgb_auroc_range,0.0019358092723597,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,age_band,multimorbidity_progression,xgb_auroc_range,0.1316356380457012,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,insurance,multimorbidity_progression,xgb_auroc_range,0.0136855420051815,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,sex,multimorbidity_progression,xgb_max_abs_calibration_gap,0.0032696211251675,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,age_band,multimorbidity_progression,xgb_max_abs_calibration_gap,0.0101110444748121,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,insurance,multimorbidity_progression,xgb_max_abs_calibration_gap,0.0182265649817467,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,sex,multimorbidity_progression,sd_min_ratio_at_25pct,0.987218045112782,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,age_band,multimorbidity_progression,sd_min_ratio_at_25pct,0.3705293276108726,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,insurance,multimorbidity_progression,sd_min_ratio_at_25pct,0.9195402298850576,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,sex,multimorbidity_progression,sd_max_ratio_at_25pct,1.0137416568511974,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,age_band,multimorbidity_progression,sd_max_ratio_at_25pct,1.9362432564982832,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,insurance,multimorbidity_progression,sd_max_ratio_at_25pct,1.0355437665782494,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,sex,multimorbidity_progression,margin_min_ratio_at_25pct,0.9714285714285714,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,age_band,multimorbidity_progression,margin_min_ratio_at_25pct,0.592447278077489,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,insurance,multimorbidity_progression,margin_min_ratio_at_25pct,0.9399141630901288,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,sex,multimorbidity_progression,margin_max_ratio_at_25pct,1.0302316450726343,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,age_band,multimorbidity_progression,margin_max_ratio_at_25pct,1.2160637238632592,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,12,insurance,multimorbidity_progression,margin_max_ratio_at_25pct,1.059708981435023,42,baseline equity audit; model column holds the subgroup attribute; test split for predictors
+2026-10-12,9,3-month,lab schedule support,follows_schedule_all_gaps,82.0,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,6-month,lab schedule support,follows_schedule_all_gaps,53.0,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,12-month,lab schedule support,follows_schedule_all_gaps,52.0,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,"GRU, hide last lab visit",multimorbidity_progression,follows_schedule_all_gaps,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,"GRU, hide random lab visit",multimorbidity_progression,follows_schedule_all_gaps,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,3-month,lab schedule support,run_of_2plus_near_gaps,629.0,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,6-month,lab schedule support,run_of_2plus_near_gaps,491.0,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,12-month,lab schedule support,run_of_2plus_near_gaps,302.0,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,"GRU, hide last lab visit",multimorbidity_progression,run_of_2plus_near_gaps,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,"GRU, hide random lab visit",multimorbidity_progression,run_of_2plus_near_gaps,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,3-month,lab schedule support,median_abs_change,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,6-month,lab schedule support,median_abs_change,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,12-month,lab schedule support,median_abs_change,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,"GRU, hide last lab visit",multimorbidity_progression,median_abs_change,0.0256231427192688,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,"GRU, hide random lab visit",multimorbidity_progression,median_abs_change,0.0255058407783508,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,3-month,lab schedule support,p90_abs_change,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,6-month,lab schedule support,p90_abs_change,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,12-month,lab schedule support,p90_abs_change,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,"GRU, hide last lab visit",multimorbidity_progression,p90_abs_change,0.1769614696502685,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,"GRU, hide random lab visit",multimorbidity_progression,p90_abs_change,0.1769614696502685,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,3-month,lab schedule support,share_crossing_0.5,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,6-month,lab schedule support,share_crossing_0.5,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,12-month,lab schedule support,share_crossing_0.5,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,"GRU, hide last lab visit",multimorbidity_progression,share_crossing_0.5,0.1169983217453848,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,"GRU, hide random lab visit",multimorbidity_progression,share_crossing_0.5,0.1174778230640134,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,3-month,lab schedule support,auroc_masked,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,6-month,lab schedule support,auroc_masked,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,12-month,lab schedule support,auroc_masked,,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,"GRU, hide last lab visit",multimorbidity_progression,auroc_masked,0.8024086761164887,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,9,"GRU, hide random lab visit",multimorbidity_progression,auroc_masked,0.8026728367690916,42,"schedule support: all 100k patients, 2018-2024, +/-30 days; masking: GRU test split"
+2026-10-12,14,keep all (observed) ,multimorbidity_progression,share_of_observed,1.0,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,keep none ,multimorbidity_progression,share_of_observed,0.0,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,fixed interval 6-month,multimorbidity_progression,share_of_observed,0.8790752815649081,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,fixed interval 12-month,multimorbidity_progression,share_of_observed,0.781005071461503,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.02,multimorbidity_progression,share_of_observed,0.0021734835012843312,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.02,multimorbidity_progression,share_of_observed,0.0021734835012843312,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.05,multimorbidity_progression,share_of_observed,0.0022393466376868865,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.05,multimorbidity_progression,share_of_observed,0.0022393466376868865,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.1,multimorbidity_progression,share_of_observed,0.1546466442732003,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.1,multimorbidity_progression,share_of_observed,0.1546466442732003,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.15,multimorbidity_progression,share_of_observed,0.2410590792333531,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.15,multimorbidity_progression,share_of_observed,0.24105907923335307,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.2,multimorbidity_progression,share_of_observed,0.38352104327208064,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.2,multimorbidity_progression,share_of_observed,0.38352104327208064,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.3,multimorbidity_progression,share_of_observed,0.7397747480735033,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.3,multimorbidity_progression,share_of_observed,0.7397747480735033,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.4,multimorbidity_progression,share_of_observed,0.8977804123032339,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.4,multimorbidity_progression,share_of_observed,0.8977804123032339,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,keep all (observed) ,multimorbidity_progression,spend_per_patient_year,50.941728509075475,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,keep none ,multimorbidity_progression,spend_per_patient_year,0.0,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,fixed interval 6-month,multimorbidity_progression,spend_per_patient_year,44.78161433251862,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,fixed interval 12-month,multimorbidity_progression,spend_per_patient_year,39.78574831460297,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.02,multimorbidity_progression,spend_per_patient_year,0.11072100644138119,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.02,multimorbidity_progression,spend_per_patient_year,0.11072100644138119,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.05,multimorbidity_progression,spend_per_patient_year,0.11407618845475637,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.05,multimorbidity_progression,spend_per_patient_year,0.11407618845475635,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.1,multimorbidity_progression,spend_per_patient_year,7.87796736740494,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.1,multimorbidity_progression,spend_per_patient_year,7.87796736740494,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.15,multimorbidity_progression,spend_per_patient_year,12.279966168953187,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.15,multimorbidity_progression,spend_per_patient_year,12.279966168953187,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.2,multimorbidity_progression,spend_per_patient_year,19.537224863883715,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.2,multimorbidity_progression,spend_per_patient_year,19.537224863883715,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.3,multimorbidity_progression,spend_per_patient_year,37.68540437423011,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.3,multimorbidity_progression,spend_per_patient_year,37.68540437423011,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.4,multimorbidity_progression,spend_per_patient_year,45.73448602431718,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.4,multimorbidity_progression,spend_per_patient_year,45.73448602431718,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,keep all (observed) ,multimorbidity_progression,roc_auc,0.8276020602879899,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,keep none ,multimorbidity_progression,roc_auc,0.8172259499267723,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,fixed interval 6-month,multimorbidity_progression,roc_auc,0.8280572120942503,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,fixed interval 12-month,multimorbidity_progression,roc_auc,0.8281456533809244,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.02,multimorbidity_progression,roc_auc,0.8175387026312391,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.02,multimorbidity_progression,roc_auc,0.8173157345304013,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.05,multimorbidity_progression,roc_auc,0.8175767132478705,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.05,multimorbidity_progression,roc_auc,0.8172898512891846,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.1,multimorbidity_progression,roc_auc,0.8202728591927289,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.1,multimorbidity_progression,roc_auc,0.819712358317115,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.15,multimorbidity_progression,roc_auc,0.8222910803491529,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.15,multimorbidity_progression,roc_auc,0.8210453677534664,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.2,multimorbidity_progression,roc_auc,0.8250489700942749,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.2,multimorbidity_progression,roc_auc,0.82288183587451,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.3,multimorbidity_progression,roc_auc,0.8270679979913284,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.3,multimorbidity_progression,roc_auc,0.8261353908146163,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.4,multimorbidity_progression,roc_auc,0.8274621939765443,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.4,multimorbidity_progression,roc_auc,0.8274027428205807,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,keep all (observed) ,multimorbidity_progression,brier,0.16695312734330164,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,keep none ,multimorbidity_progression,brier,0.1725398744147754,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,fixed interval 6-month,multimorbidity_progression,brier,0.166811407612168,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,fixed interval 12-month,multimorbidity_progression,brier,0.16664068762172288,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.02,multimorbidity_progression,brier,0.1723747860074967,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.02,multimorbidity_progression,brier,0.17250222783036476,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.05,multimorbidity_progression,brier,0.17235568485227176,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.05,multimorbidity_progression,brier,0.17251574938561615,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.1,multimorbidity_progression,brier,0.1706730990856898,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.1,multimorbidity_progression,brier,0.1711750065477239,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.15,multimorbidity_progression,brier,0.1696674820032326,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.15,multimorbidity_progression,brier,0.1705309727776549,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.2,multimorbidity_progression,brier,0.16862808738181076,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.2,multimorbidity_progression,brier,0.169620766876753,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.3,multimorbidity_progression,brier,0.16759536791997465,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.3,multimorbidity_progression,brier,0.1678212798990435,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.4,multimorbidity_progression,brier,0.167089912147288,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.4,multimorbidity_progression,brier,0.16714040283979223,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds

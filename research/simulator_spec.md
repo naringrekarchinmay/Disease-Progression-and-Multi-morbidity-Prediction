@@ -1,20 +1,30 @@
-# Semi-synthetic multimorbidity simulator: specification (draft for review)
+# Semi-synthetic multimorbidity simulator: specification
 
-Written 2026-10-12, ISEM 735 week 6. Nothing here is built yet. Decisions marked **[D1]** to **[D4]**
-need Chinmay's sign-off before the build starts.
+Written 2026-10-12, ISEM 735 week 6, and updated the same day for the leak-free data. Decisions
+**[D1]** to **[D4]** were approved by Chinmay on 2026-10-12.
 
 ## Why a simulator, and why not one learned from this data
 
-The Kaggle data cannot rank measurement schedules. Lab timing is random, and lab features carry 3.7% of
-the calibrated XGBoost's gain, so under masking every schedule, from no labs to all labs, scores within
-0.0009 AUROC (`research/scheduling_notes.md`). A generator learned from this data (for example a
-Delphi-style transformer) would learn the same randomness and reproduce the same flat result.
+Updated 2026-10-12. On the leak-free data (`research/leak_notes.md`) masking is no longer flat: keeping no
+labs scores AUROC 0.817 and keeping all 0.828, and an uncertainty-threshold rule beats random measurement
+slightly but not a fixed 12-month schedule (`research/scheduling_notes.md`). Masking still has three
+limits a simulator removes. It can only drop observed visits, so it cannot test schedules denser than
+care in the data. It cannot compute the delay in detecting a new condition (RQ3), because nothing in the
+record says when a condition truly began. And with no ground truth it cannot check fitted Q-evaluation.
 
-The simulator instead gives each lab-linked condition a hidden severity that the labs observe with a
-tunable signal strength, beta. Everything else is calibrated to the Kaggle data. At beta = 0 the labs are
-uninformative, which should reproduce the flat masking result; that is the simulator's first validity
-check. Sweeping beta upward asks the research question the data alone cannot: how informative do labs
-have to be before adaptive scheduling beats fixed intervals, and for whom?
+A generator learned from this data (for example a Delphi-style transformer) would also learn the Kaggle
+generator's artifacts: labs that track all-time diagnosis flags regardless of timing, and medications
+that start before their diagnoses. The simulator instead gives each lab-linked condition a hidden
+severity that the labs observe with a tunable signal strength, beta, and starts medications at
+diagnosis. Everything else is calibrated to the Kaggle data. At beta = 0 the labs carry no information,
+which is the simulator's first sanity check: every schedule should then score the same. Sweeping beta
+upward asks the question the data alone cannot: how informative do labs have to be before adaptive
+scheduling beats fixed intervals, and for whom?
+
+**Lab magnitudes.** In the Kaggle data, labs differ strongly between patients ever and never diagnosed
+(creatinine 5.74 against 0.90 for kidney disease; LDL 142 against 64 for hyperlipidemia; glucose 170
+against 131 for diabetes; no difference for BNP). At beta = 1 and full severity the simulated lab means
+reach those diagnosed means, so magnitudes come from the data and timing comes from the literature.
 
 Testing evaluation methods inside a simulator with known ground truth has precedent: Oberst and Sontag
 (2019) used a synthetic sepsis environment to examine off-policy evaluation of treatment policies.
@@ -83,7 +93,7 @@ At beta = 0 the simulator must match the Kaggle data on:
 | Median gap between lab visits | 431 days |
 | Multimorbidity progression in the at-risk cohort | 43.5% (test set) |
 | Correlation of lab visits with Charlson index | 0.00 |
-| Masking frontier | flat, within 0.001 AUROC |
+| Masking frontier at beta = 0 | flat (labs carry no information) |
 
 Plus condition prevalence and onset by age band, and lab abnormal rates by test, each within a tolerance
 set in the tests.

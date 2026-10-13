@@ -124,7 +124,9 @@ class Scorer:
         from src.data_cleaning import clean_all, load_raw_data
 
         self.score_metrics = score_metrics
-        features = rp.load_feature_table()
+        from research.data import align_medications_to_diagnoses, load_features
+
+        features = load_features()
         X_test, y_test = calibration_splits(features, TARGET)["test"]
         self.test_ids = features.loc[X_test.index, "patient_id"].tolist()
         self.y = y_test.to_numpy()
@@ -133,6 +135,7 @@ class Scorer:
         raw = load_raw_data()
         ids = set(self.test_ids)
         self.data = clean_all({name: t[t["patient_id"].isin(ids)] for name, t in raw.items()})
+        self.data["medications"] = align_medications_to_diagnoses(self.data["medications"], self.data["diagnoses"])
         self.labs = self.data["lab_results"]
         self.opps = lab_opportunities(self.labs, self.test_ids)
         self.age_band = subgroups(raw["patients"]).set_index("patient_id")["age_band"]
@@ -189,11 +192,13 @@ def plot_frontier(table: pd.DataFrame) -> None:
                                 xytext=(4, 4), textcoords="offset points")
         ax.set_xlabel("Measurement spend per patient-year, 2018-2021 ($)")
         ax.set_ylabel(label)
-    # Fixed ranges: auto-scaling would zoom into noise and make the flat frontier look shaped.
-    axes[0].set_ylim(0.84, 0.88)
-    axes[1].set_ylim(0.135, 0.155)
-    spread = table["roc_auc"].max() - table["roc_auc"].min()
-    axes[0].set_title(f"Budget frontier under masking: all schedules within {spread:.4f} AUROC")
+    # At least a 0.03 span around the data: auto-scaling would zoom into noise and make a flat
+    # frontier look shaped, while fixed limits can push points off the chart.
+    for ax, metric in [(axes[0], "roc_auc"), (axes[1], "brier")]:
+        low, high = table[metric].min(), table[metric].max()
+        middle, half = (low + high) / 2, max(0.015, (high - low) / 2 + 0.005)
+        ax.set_ylim(middle - half, middle + half)
+    axes[0].set_title("Budget frontier under masking (test set)")
     axes[1].set_title("Calibration side of the frontier")
     axes[0].legend(fontsize=8, loc="lower right")
     fig.tight_layout()
