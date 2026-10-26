@@ -179,3 +179,79 @@ Gain over observed care at beta 1 (bootstrap SE): 3-month +0.029 (0.003), 6-mont
 - Random visits use one seed for prediction (three in part 1).
 - Medication templates for newly lab-detected patients are drawn per chunk, so medication features can
   differ slightly between schedules for the same patient.
+
+---
+
+# Beta sweep, part 3: adaptive threshold policies (W7-3, task 18)
+
+Added 2026-10-26. Code: `research/simulator_policy.py`. Tests: `tests/test_simulator_policy.py`.
+Table: `outputs/tables/simulator_sweep_policies.csv` (100,000 evaluation patients, seed 42; 25 minutes).
+
+## Setup (confirmed by Chinmay, 2026-10-26)
+
+- **Quarterly decisions** (28 over 2018-2024). The policy sees covariates, the diagnoses made so far, the
+  count of other conditions, and for each trigger test the latest value, the change from the previous one
+  and the months since the last lab. It never sees truth.
+- **Risk** = probability that a lab-linked condition has begun but is not yet diagnosed, or begins within
+  12 months. The risk models are trained per beta on a separate 30,000-patient cohort (seed 43) measured by a
+  random quarterly policy at the 12-month rate (840,000 snapshots; label rate 16% to 23%).
+- **Closeness rule**: measure when calibrated risk is within tau of 50% (the October masking rule).
+- **Spread rule**: measure when the standard deviation across 10 bootstrap-trained XGBoosts is above a
+  threshold. It stands in for the GRU's Monte Carlo dropout SD, which would need PyTorch inside the loop.
+- **Matched spend**: thresholds are set by bisection on a third cohort (10,000 patients, seed 44) to hit the
+  guideline's and the 12-month schedule's spend at each beta. Achieved spend is within 3% of target
+  everywhere ($114 to $126 against $112 to $124; $214 to $218 against $214).
+- The evaluation cohort, truth and common random numbers are those of tasks 16 and 17, so rows compare
+  directly with the fixed schedules. The engine reproduces the fixed-schedule engine exactly when it
+  measures every quarter (tested).
+
+## Results at matched spend (all four conditions)
+
+Restricted mean delay in months / AUROC (true-onset labels). Fixed schedules from tasks 16 and 17.
+
+| beta | Guideline | Closeness | Spread | 12-month | Random | Closeness | Spread |
+|---|---|---|---|---|---|---|---|
+| | *~$118 budget* | | | *$214 budget* | | | |
+| 0 | 14.9 / 0.742 | 14.7 / 0.742 | 15.0 / 0.744 | 13.5 / 0.738 | 13.9 / 0.741 | 14.1 / 0.740 | 14.1 / 0.741 |
+| 0.25 | 14.4 / 0.765 | 14.2 / 0.748 | 14.2 / 0.746 | 12.7 / 0.764 | 13.2 / 0.760 | 13.4 / 0.752 | 13.1 / 0.751 |
+| 0.5 | 12.8 / 0.772 | 12.7 / 0.749 | 11.9 / 0.746 | 9.9 / 0.772 | 10.7 / 0.765 | 11.8 / 0.750 | 10.4 / 0.757 |
+| 1 | 10.1 / 0.777 | 11.7 / 0.750 | 9.7 / 0.748 | 6.5 / 0.776 | 8.0 / 0.768 | 10.4 / 0.759 | 7.8 / 0.757 |
+| 2 | 8.8 / 0.784 | 13.1 / 0.760 | 10.1 / 0.754 | 4.5 / 0.785 | 6.5 / 0.774 | 13.4 / 0.782 | 7.8 / 0.776 |
+
+Measurement share by age (multiple of a fair share), beta 1, 12-month budget: closeness rule under-50s
+0.76, 80+ 1.14; spread rule under-50s 1.05, 80+ 1.11. At the guideline budget: closeness 0.57 and 1.21;
+spread 1.17 and 1.10. Fixed schedules are 1.00 by construction; the guideline is 0.88 and 1.05.
+
+## Reading
+
+1. **No adaptive rule beats the fixed 12-month schedule at the same spend**, on detection delay or on
+   prediction, at any beta. The best adaptive result, the spread rule at beta 1, is 1.2 months slower than
+   12-month (7.8 against 6.5) and 0.019 lower in AUROC. This matches the October masking result
+   (RQ2: the threshold rule did not beat a fixed 12-month schedule).
+2. **The spread rule beats the guideline slightly on detection at beta 0.5 and 1** (11.9 against 12.8,
+   9.7 against 10.1 months) at the same cost. That is the one place an uncertainty rule earns its keep.
+   It loses again at beta 2 and costs 0.02 to 0.03 AUROC everywhere.
+3. **The closeness rule gets worse as labs get more informative**: at the 12-month budget its delay goes
+   from 10.4 months at beta 1 to 13.4 at beta 2, and diabetes delay reaches 26.9, worse than observed care.
+   This is a mechanism, not noise. When labs are informative, a patient with rising values gets a risk
+   near 1, so the rule stops measuring exactly the people most likely to be sick and undiagnosed.
+   "Uncertain whether risk is high" is the right target for a classifier's labels and the wrong one for
+   detection.
+4. **Adaptive rules cost prediction accuracy.** They concentrate visits on some patients and leave others
+   unmeasured before the cutoff, and the progression predictor does better with even coverage.
+5. **RQ4: the two signals send visits to opposite age groups**, as in the September equity audit with the
+   GRU's dropout SD. Closeness under-measures under-50s by 24% to 46%. Spread over-measures them by 5% to
+   30%. The choice of uncertainty measure, not the data, decides who is monitored.
+6. At beta 0, all rules are within 0.5 months and 0.006 AUROC of each other and of the fixed schedules, as
+   expected when labs carry no information.
+
+## Limits
+
+- The policies are one-step threshold rules, not a learned policy. Week 9's learned policy and fitted
+  Q-evaluation are the proper test of whether any adaptive policy can beat regular spacing here.
+- The risk models are trained under a random quarterly policy and applied under a different one, a
+  distribution shift the policies do not correct for.
+- The spread rule uses bagged XGBoost, not the proposal's GRU dropout. The qualitative age effect matches
+  the GRU's (Part 3 of `research/equity_notes.md`), but the magnitudes are not interchangeable.
+- One seed, one split, default XGBoost settings; differences under about 0.3 months or 0.005 AUROC should
+  not be read as real.
