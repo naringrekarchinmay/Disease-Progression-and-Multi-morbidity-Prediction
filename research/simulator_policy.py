@@ -90,9 +90,13 @@ def random_score(seed: int):
 
 
 def run_policy(cohort: sweep.Cohort, source: dict[str, pd.DataFrame], params: sim.SimulatorParams, beta: float,
-               seed: int, score_fn, threshold: float, record: bool = False, static: pd.DataFrame | None = None,
-               other: np.ndarray | None = None) -> PolicyRun:
-    """Quarterly decisions: measure a patient when score_fn(features) >= threshold."""
+               seed: int, score_fn=None, threshold: float = 0.0, record: bool = False,
+               static: pd.DataFrame | None = None, other: np.ndarray | None = None, policy_fn=None) -> PolicyRun:
+    """Quarterly decisions: measure a patient when score_fn(features) >= threshold.
+
+    Alternatively policy_fn(features) returns (measure, probability of measuring) for a stochastic
+    policy; the probabilities are recorded with the snapshots (research/simulator_mdp.py uses them).
+    """
     ids = cohort.ages.index.to_numpy()
     n = len(ids)
     index = pd.Series(np.arange(n), index=ids)
@@ -128,10 +132,16 @@ def run_policy(cohort: sweep.Cohort, source: dict[str, pd.DataFrame], params: si
         for t, j in test_index.items():
             features[f"last_{t}"] = last[:, j]
             features[f"delta_{t}"] = last[:, j] - prev[:, j]
+        if policy_fn is not None:
+            measure, p_measure = policy_fn(features)
+            measure = np.asarray(measure, dtype=bool)
+        else:
+            measure = np.asarray(score_fn(features)) >= threshold
+            p_measure = measure.astype(float)
         if record:
             label = ((onset <= d + HORIZON_MONTHS) & ~known).any(axis=1)
-            snapshots.append(features.assign(patient_id=ids, label=label.astype(int)))
-        measure = np.asarray(score_fn(features)) >= threshold
+            snapshots.append(features.assign(patient_id=ids, label=label.astype(int), action=measure.astype(int),
+                                             p_measure=np.asarray(p_measure, dtype=float)))
         if not measure.any():
             continue
         visits = sweep.visits_from_months(pd.DataFrame({"patient_id": ids[measure], "month": d}))
@@ -166,7 +176,7 @@ def run_policy(cohort: sweep.Cohort, source: dict[str, pd.DataFrame], params: si
 
 
 def feature_columns(snapshots: pd.DataFrame) -> list[str]:
-    return [c for c in snapshots.columns if c not in ("patient_id", "label")]
+    return [c for c in snapshots.columns if c not in ("patient_id", "label", "action", "p_measure")]
 
 
 def train_risk_models(snapshots: pd.DataFrame, seed: int):
