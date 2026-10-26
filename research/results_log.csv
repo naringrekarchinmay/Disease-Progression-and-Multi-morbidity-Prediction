@@ -115,16 +115,16 @@ date,task,model,target,metric,value,seed,notes
 2026-10-12,14,keep none ,multimorbidity_progression,share_of_observed,0.0,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,fixed interval 6-month,multimorbidity_progression,share_of_observed,0.8790752815649081,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,fixed interval 12-month,multimorbidity_progression,share_of_observed,0.781005071461503,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-12,14,threshold tau=0.02,multimorbidity_progression,share_of_observed,0.0021734835012843312,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-12,14,random (matched) matched to tau=0.02,multimorbidity_progression,share_of_observed,0.0021734835012843312,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-12,14,threshold tau=0.05,multimorbidity_progression,share_of_observed,0.0022393466376868865,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-12,14,random (matched) matched to tau=0.05,multimorbidity_progression,share_of_observed,0.0022393466376868865,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.02,multimorbidity_progression,share_of_observed,0.0021734835012843,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.02,multimorbidity_progression,share_of_observed,0.0021734835012843,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.05,multimorbidity_progression,share_of_observed,0.0022393466376868,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.05,multimorbidity_progression,share_of_observed,0.0022393466376868,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,threshold tau=0.1,multimorbidity_progression,share_of_observed,0.1546466442732003,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,random (matched) matched to tau=0.1,multimorbidity_progression,share_of_observed,0.1546466442732003,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,threshold tau=0.15,multimorbidity_progression,share_of_observed,0.2410590792333531,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-12,14,random (matched) matched to tau=0.15,multimorbidity_progression,share_of_observed,0.24105907923335307,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-12,14,threshold tau=0.2,multimorbidity_progression,share_of_observed,0.38352104327208064,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-12,14,random (matched) matched to tau=0.2,multimorbidity_progression,share_of_observed,0.38352104327208064,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.15,multimorbidity_progression,share_of_observed,0.241059079233353,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.2,multimorbidity_progression,share_of_observed,0.3835210432720806,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.2,multimorbidity_progression,share_of_observed,0.3835210432720806,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,threshold tau=0.3,multimorbidity_progression,share_of_observed,0.7397747480735033,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,random (matched) matched to tau=0.3,multimorbidity_progression,share_of_observed,0.7397747480735033,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,threshold tau=0.4,multimorbidity_progression,share_of_observed,0.8977804123032339,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
@@ -133,10 +133,10 @@ date,task,model,target,metric,value,seed,notes
 2026-10-12,14,keep none ,multimorbidity_progression,spend_per_patient_year,0.0,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,fixed interval 6-month,multimorbidity_progression,spend_per_patient_year,44.78161433251862,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,fixed interval 12-month,multimorbidity_progression,spend_per_patient_year,39.78574831460297,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-12,14,threshold tau=0.02,multimorbidity_progression,spend_per_patient_year,0.11072100644138119,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-12,14,random (matched) matched to tau=0.02,multimorbidity_progression,spend_per_patient_year,0.11072100644138119,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-12,14,threshold tau=0.05,multimorbidity_progression,spend_per_patient_year,0.11407618845475637,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-12,14,random (matched) matched to tau=0.05,multimorbidity_progression,spend_per_patient_year,0.11407618845475635,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.02,multimorbidity_progression,spend_per_patient_year,0.1107210064413811,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.02,multimorbidity_progression,spend_per_patient_year,0.1107210064413811,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.05,multimorbidity_progression,spend_per_patient_year,0.1140761884547563,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.05,multimorbidity_progression,spend_per_patient_year,0.1140761884547563,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,threshold tau=0.1,multimorbidity_progression,spend_per_patient_year,7.87796736740494,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,random (matched) matched to tau=0.1,multimorbidity_progression,spend_per_patient_year,7.87796736740494,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,threshold tau=0.15,multimorbidity_progression,spend_per_patient_year,12.279966168953187,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
@@ -165,21 +165,49 @@ date,task,model,target,metric,value,seed,notes
 2026-10-12,14,random (matched) matched to tau=0.3,multimorbidity_progression,roc_auc,0.8261353908146163,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,threshold tau=0.4,multimorbidity_progression,roc_auc,0.8274621939765443,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,random (matched) matched to tau=0.4,multimorbidity_progression,roc_auc,0.8274027428205807,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-12,14,keep all (observed) ,multimorbidity_progression,brier,0.16695312734330164,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,keep all (observed) ,multimorbidity_progression,brier,0.1669531273433016,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,keep none ,multimorbidity_progression,brier,0.1725398744147754,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,fixed interval 6-month,multimorbidity_progression,brier,0.166811407612168,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-12,14,fixed interval 12-month,multimorbidity_progression,brier,0.16664068762172288,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,fixed interval 12-month,multimorbidity_progression,brier,0.1666406876217228,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,threshold tau=0.02,multimorbidity_progression,brier,0.1723747860074967,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-12,14,random (matched) matched to tau=0.02,multimorbidity_progression,brier,0.17250222783036476,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-12,14,threshold tau=0.05,multimorbidity_progression,brier,0.17235568485227176,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-12,14,random (matched) matched to tau=0.05,multimorbidity_progression,brier,0.17251574938561615,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.02,multimorbidity_progression,brier,0.1725022278303647,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.05,multimorbidity_progression,brier,0.1723556848522717,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.05,multimorbidity_progression,brier,0.1725157493856161,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,threshold tau=0.1,multimorbidity_progression,brier,0.1706730990856898,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,random (matched) matched to tau=0.1,multimorbidity_progression,brier,0.1711750065477239,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,threshold tau=0.15,multimorbidity_progression,brier,0.1696674820032326,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,random (matched) matched to tau=0.15,multimorbidity_progression,brier,0.1705309727776549,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-12,14,threshold tau=0.2,multimorbidity_progression,brier,0.16862808738181076,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.2,multimorbidity_progression,brier,0.1686280873818107,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,random (matched) matched to tau=0.2,multimorbidity_progression,brier,0.169620766876753,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-12,14,threshold tau=0.3,multimorbidity_progression,brier,0.16759536791997465,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,threshold tau=0.3,multimorbidity_progression,brier,0.1675953679199746,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,random (matched) matched to tau=0.3,multimorbidity_progression,brier,0.1678212798990435,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
 2026-10-12,14,threshold tau=0.4,multimorbidity_progression,brier,0.167089912147288,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
-2026-10-12,14,random (matched) matched to tau=0.4,multimorbidity_progression,brier,0.16714040283979223,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-12,14,random (matched) matched to tau=0.4,multimorbidity_progression,brier,0.1671404028397922,42,masking evaluation on the test split; calibrated XGBoost; random = mean of 5 seeds
+2026-10-26,15,simulator beta=0 model: all features,multimorbidity_progression,roc_auc,0.8053148342933165,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=0 model: no lab features,multimorbidity_progression,roc_auc,0.8098543987827003,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=0 schedule: keep all,multimorbidity_progression,roc_auc,0.8053148342933165,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=0 schedule: keep none,multimorbidity_progression,roc_auc,0.8066880186401257,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=0 schedule: 6-month,multimorbidity_progression,roc_auc,0.8053819250576653,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=0 schedule: 12-month,multimorbidity_progression,roc_auc,0.8049473735241532,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=0 schedule: random (matched to 12-month),multimorbidity_progression,roc_auc,0.8053446961874036,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=1 model: all features,multimorbidity_progression,roc_auc,0.7877110300482539,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=1 model: no lab features,multimorbidity_progression,roc_auc,0.7808619500747866,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=1 schedule: keep all,multimorbidity_progression,roc_auc,0.7877110300482539,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=1 schedule: keep none,multimorbidity_progression,roc_auc,0.7722518507479053,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=1 schedule: 6-month,multimorbidity_progression,roc_auc,0.7872385459032584,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=1 schedule: 12-month,multimorbidity_progression,roc_auc,0.7869198049137578,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=1 schedule: random (matched to 12-month),multimorbidity_progression,roc_auc,0.7848306174101705,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=0 model: all features,multimorbidity_progression,brier,0.17840310284997615,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=0 model: no lab features,multimorbidity_progression,brier,0.1764615020114001,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=0 schedule: keep all,multimorbidity_progression,brier,0.17840310284997615,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=0 schedule: keep none,multimorbidity_progression,brier,0.177816965865904,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=0 schedule: 6-month,multimorbidity_progression,brier,0.17836732964571173,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=0 schedule: 12-month,multimorbidity_progression,brier,0.17857601211687457,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=0 schedule: random (matched to 12-month),multimorbidity_progression,brier,0.17836765311553474,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=1 model: all features,multimorbidity_progression,brier,0.18729230441510664,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=1 model: no lab features,multimorbidity_progression,brier,0.18994892625976986,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=1 schedule: keep all,multimorbidity_progression,brier,0.18729230441510664,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=1 schedule: keep none,multimorbidity_progression,brier,0.19392175011423982,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=1 schedule: 6-month,multimorbidity_progression,brier,0.1875001754892271,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=1 schedule: 12-month,multimorbidity_progression,brier,0.1877792828203552,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"
+2026-10-26,15,simulator beta=1 schedule: random (matched to 12-month),multimorbidity_progression,brier,0.1884521396181272,42,"simulator smoke run, 100,000 simulated patients; calibrated XGBoost refit per beta; schedules masked on the test split"

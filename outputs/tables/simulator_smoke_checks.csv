@@ -1,0 +1,5 @@
+check,value,passed
+beta 0: lab features add nothing,-0.004539564489383752,True
+beta 0: masking schedules tie,0.0017406451159724945,True
+beta 1: lab features add signal,0.006849079973467287,False
+beta 1: keeping labs beats dropping them,0.01545917930034868,True

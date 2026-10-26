@@ -85,3 +85,42 @@ $12.47 and TSH $16.80, for $119.30, plus the $95.19 office visit, or **$214.49**
   that needs the feature pipeline and XGBoost, which is W6-3.
 - Medication and admission marginals. Admissions are copied; lab-linked medications are rebuilt at
   diagnosis, and every diagnosed Kaggle patient has one, so the rate is 1.0.
+
+## W6-3: end-to-end smoke run (task 15)
+
+Code: `research/simulator_smoke.py`. Tables: `outputs/tables/simulator_smoke.csv` and
+`simulator_smoke_checks.csv`. Cohorts (100,000 patients, seed 42) are saved under
+`data/processed/simulated/beta_0/` and `beta_1/` (gitignored) for weeks 7-8.
+
+For each beta the unchanged leak-free feature pipeline (`src/features.py`) ran on the simulated tables,
+the calibrated XGBoost was refit with and without the lab features (`lab_*` columns), and masking
+schedules were scored on the test split with the all-features model, as `research/scheduling.py` does
+on the Kaggle data. The keep-all schedule reproduces the direct test score exactly (asserted).
+
+| | beta 0 | beta 1 |
+|---|---|---|
+| Progression rate, at-risk cohort | 44.4% | 46.5% |
+| AUROC, all features | 0.8053 | 0.7877 |
+| AUROC, no lab features | 0.8099 | 0.7809 |
+| Masking: keep all / 6-month / 12-month / random / keep none | 0.8053 / 0.8054 / 0.8049 / 0.8053 / 0.8067 | 0.7877 / 0.7872 / 0.7869 / 0.7848 / 0.7723 |
+| Calibration slope, all features | 0.95 | 0.97 |
+
+Checks (tolerances are judgements for a test split of about 7,000 at-risk patients, where AUROC has a
+standard error near 0.005):
+
+| Check | Value | Rule | Pass |
+|---|---|---|---|
+| beta 0: lab features add nothing | -0.0045 | within 0.005 | yes |
+| beta 0: masking schedules tie | spread 0.0017 | within 0.005 | yes |
+| beta 1: lab features add signal | +0.0068 | at least 0.01 | **no** |
+| beta 1: keeping labs beats dropping them | +0.0155 | at least 0.01 | yes |
+
+**Reading.** Beta 0 behaves as designed: labs carry nothing and no schedule can matter for prediction.
+At beta 1 labs do carry signal (dropping every lab costs 0.016 AUROC, about three standard errors), but
+less than the 0.01 margin set for refitting without lab features. One mechanism is visible in the truth
+tables: at beta 1, routine labs diagnose 16,311 conditions by the cutoff against 4,165 at beta 0, and
+3,291 more conditions are diagnosed by the cutoff overall. Those cases enter the baseline condition
+features and leave the at-risk cohort, so the labs' information shows up partly through diagnosis
+features rather than lab values, and overall AUROC is lower at beta 1 (0.788 against 0.805). Background
+care is also sparse (2.6 visits in seven years), so few pre-cutoff labs fall in the rise window before an
+onset. This is a hypothesis to test in the beta sweep (beta 2, denser schedules), not a settled finding.
