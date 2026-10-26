@@ -5,8 +5,8 @@ Action: measure (full panel) or not. Reward per quarter, as confirmed by Chinmay
 
     r = -$214.49 x measurements - lambda x (months a lab-linked condition has truly begun but is undiagnosed)
 
-with lambda in {$25, $50, $100, $200} per undiagnosed condition-month ($50 the headline; a judgement, not
-a published price) and discounting at 3% a year (Sanders et al., 2016), 1.03^(-1/4) per quarter, over the
+with lambda in {$25, $50, $100, $200, $400} per undiagnosed condition-month ($200 the headline since
+2026-10-26, when $50 turned out to make never measuring optimal; a judgement, not a published price) and discounting at 3% a year (Sanders et al., 2016), 1.03^(-1/4) per quarter, over the
 28 quarters of 2018-2024. Prevalent undiagnosed onsets count from January 2018.
 
 The true value of a policy is its mean discounted return over the seed-42 evaluation cohort, computed exactly
@@ -32,8 +32,8 @@ from research.cost_model import SIMULATOR_MEASUREMENT_COST
 
 GAMMA = 1.03 ** -0.25
 N_QUARTERS = sim.N_MONTHS // 3
-LAMBDAS = [25.0, 50.0, 100.0, 200.0]
-HEADLINE_LAMBDA = 50.0
+LAMBDAS = [25.0, 50.0, 100.0, 200.0, 400.0]
+HEADLINE_LAMBDA = 200.0
 FOLLOW_GUIDELINE = 0.8
 EXPLORE_RATE = 0.25
 QUARTER_DISCOUNT = GAMMA ** np.arange(N_QUARTERS)

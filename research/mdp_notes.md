@@ -59,12 +59,10 @@ that to 5.4 at beta 1 for $1,361 of discounted measurement cost; the guideline c
 4. The behavior policy's value is within 1% to 6% of the guideline's at every lambda, as intended: the
    logged data looks like guideline care with some exploration.
 
-## Implication for W9-2 (needs a decision)
+## Decision (2026-10-26)
 
-Lambda is a judgement, and the headline value decides whether the learning problem is interesting.
-Options: move the headline to $200 and extend the sweep upward (for example $400), so the learned policy
-is tested where measurement can pay; or keep $50 and report "measurement is not worth its cost below about
-$115 per condition-month" as the finding, with the learned policy run at $200 only.
+Chinmay moved the headline lambda to $200 and extended the sweep to $400. At $50 the finding stands as
+reported above: measurement is not worth its cost below about $115 per condition-month, even at beta 1.
 
 ## Reference
 
@@ -73,3 +71,74 @@ Owens, D. K., Prosser, L. A., Salomon, J. A., Sculpher, M. J., Trikalinos, T. A.
 J. E., & Ganiats, T. G. (2016). Recommendations for conduct, methodological practices, and reporting of
 cost-effectiveness analyses: Second Panel on Cost-Effectiveness in Health and Medicine. *JAMA, 316*(10),
 1093-1103. https://doi.org/10.1001/jama.2016.12195
+
+---
+
+# Week 9, part 2: learned policy by fitted Q-iteration (W9-2, task 20)
+
+Added 2026-10-26. Code: `research/simulator_fqi.py`. Tests: `tests/test_simulator_fqi.py`. Table:
+`outputs/tables/simulator_fqi_policy.csv` (4 minutes).
+
+## Method
+
+- **Offline learning, as from real records.** The policy is learned only from logged data: 30,000 patients
+  (seed 43) cared for by the behavior policy (guideline with 20% exploration), 840,000 patient-quarters per
+  beta. It never queries the simulator while learning.
+- **Fitted Q-iteration by backward induction.** The horizon is 28 quarters and the month is in the state, so
+  for quarter t the target is r_t + gamma x max_a Q_{t+1}(s', a), regressed on the state with one XGBoost
+  per action (150 trees, depth 4, minimum child weight 20). The policy measures when Q(measure) >
+  Q(wait).
+- **True value** comes from running the greedy policy on the seed-42 evaluation cohort (100,000 patients) and
+  scoring it exactly, next to the policies in part 1.
+- **Oracle**: knows every onset and measures once at the first quarter after it. No real policy can
+  reach it; it shows how much room there is.
+- Learned at lambda $100, $200 (headline) and $400.
+
+## Results
+
+True value per patient (higher is better), at the headline lambda of $200:
+
+| beta | Learned policy | Best fixed policy | Gain | Oracle | Share of gap to oracle closed |
+|---|---|---|---|---|---|
+| 0 | -2,814 | never measure, -2,834 | +20 | -2,495 | 6% |
+| 0.25 | -2,786 | never measure, -2,834 | +48 | -2,341 | 10% |
+| 0.5 | -2,145 | guideline, -2,795 | +650 | -1,780 | 64% |
+| 1 | -1,669 | guideline, -2,246 | +577 | -813 | 40% |
+| 2 | -1,238 | guideline, -2,046 | +808 | -337 | 47% |
+
+At beta 1 and $200 the learned policy measures 0.52 times a year (guideline 0.58) and cuts the restricted
+mean delay to 7.5 months (guideline 10.1, 12-month 6.5). At $400 it beats the 12-month schedule, the best
+fixed policy there, on both counts at once: 0.77 measurements a year against 1.0, and 5.6 months against
+6.5, for a value of -2,506 against -3,524.
+
+Other lambdas: at $400 the learned policy beats the best fixed policy at every beta (+324 to +1,369). At
+$100 it beats it from beta 0.5 up (+137 to +478) but loses at beta 0 and 0.25 (-40 and -107), where never
+measuring is best.
+
+**FQI overestimates its own value.** Its estimate of the starting value is higher than the truth in every
+one of the 15 settings, by $114 to $1,415 per patient (beta 1, $200: estimated -1,403, true -1,669). Taking
+the maximum over noisy Q estimates inflates them; week 9's off-policy evaluation has to correct this.
+
+**Who it measures**: under-50s at 0.53 to 0.87 of a fair share, over-80s at 1.07 to 1.25. That follows risk
+(onsets are rarer in the young), but it is the same direction as the closeness rule in part 3, so RQ4 has to
+report it.
+
+## Reading
+
+1. **A learned policy beats every fixed schedule and the guideline once labs carry signal** (beta 0.5 and
+   up), at the headline price and above. The one-step threshold rules of task 18 could not. The difference
+   is that fitted Q-iteration values a measurement by what it is expected to save, so it measures the
+   patients whose labs are rising and whose risk is high. The closeness rule did the opposite.
+2. It closes 40% to 64% of the gap between the best fixed policy and the oracle at beta 0.5 to 2 ($200).
+   The rest is the price of not knowing onset.
+3. Where labs are uninformative (beta 0 and 0.25), the learned policy can only match never measuring, and
+   at $100 it is slightly worse: optimistic Q values make it measure when it should not.
+
+## Limits
+
+- **The reward uses truth.** Undiagnosed condition-months need the true onset, which real records do not
+  have. In the simulator that is fine for learning and checking; with real data the reward would need a
+  proxy (for example, months from a later diagnosis back to the first abnormal value).
+- One seed, one training cohort, default regressor settings, no confidence intervals yet.
+- The learned policy is evaluated in the same simulator it was trained on. That is in-distribution: it shows
+  what is achievable when the model of disease is right, not robustness to a wrong one.
