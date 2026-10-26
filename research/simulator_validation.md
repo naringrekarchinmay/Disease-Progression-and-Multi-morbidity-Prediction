@@ -105,7 +105,7 @@ on the Kaggle data. The keep-all schedule reproduces the direct test score exact
 | Masking: keep all / 6-month / 12-month / random / keep none | 0.8053 / 0.8054 / 0.8049 / 0.8053 / 0.8067 | 0.7877 / 0.7872 / 0.7869 / 0.7848 / 0.7723 |
 | Calibration slope, all features | 0.95 | 0.97 |
 
-Checks (tolerances are judgements for a test split of about 7,000 at-risk patients, where AUROC has a
+Checks (tolerances are judgements for a test split of about 10,000 at-risk patients (a quarter of the cohort, as on the Kaggle data), where AUROC has a
 standard error near 0.005):
 
 | Check | Value | Rule | Pass |
