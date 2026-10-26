@@ -83,6 +83,31 @@ the predictors, the cost model and the equity audit all run unchanged on simulat
 component, such as a sequence model that generates the non-lab conditions, is a stretch goal; the
 "more AI" work lands in the retrained predictor and the week 9 learned policy instead.
 
+## W6-1 implementation decisions (confirmed by Chinmay, 2026-10-26)
+
+The core (`research/simulator.py`) refines the model above with "resample and overlay": each simulated
+patient copies a resampled Kaggle patient's covariates, admissions, background lab-visit dates and
+non-lab-linked diagnoses, and only the four lab-linked conditions, their labs and their medications are
+regenerated. Admissions are copied unchanged (refines D4) so the pipeline's schema holds. If the source
+patient was diagnosed, that date is the clinical diagnosis and true onset is a lag before it; others can
+have an onset whose clinical diagnosis would fall after 2024, at the data's incidence. Severity rises
+quadratically over the window W before onset.
+
+| Item | Decision |
+|---|---|
+| Window W (months) | diabetes 36, kidney 48, heart failure 30, hyperlipidemia 24 (judgement) |
+| Clinical lag (months, uniform) | diabetes 24-72, kidney 24-60, heart failure 6-24; hyperlipidemia: onset between the previous routine lab visit and the clinical diagnosis (judgement) |
+| Panel | every lab visit returns all 17 tests; the data's test choice gives the diagnosis away (HDL and triglycerides only in hyperlipidemics, HbA1c 96% in diabetics, eGFR 90% in kidney patients) |
+| Tests without contrast | HbA1c healthy 5.4% (SD 0.5) and BNP healthy from the data; both reach the cutoff plus one healthy SD at full severity (HbA1c 7.0, BNP 116.6). HDL and triglycerides carry no signal |
+| Triggers | clinical cutoffs: glucose >= 126, HbA1c >= 6.5, eGFR < 60, LDL >= 160, BNP > 100; diagnose only if s >= 1 |
+| Noise | the data's never-diagnosed spread per test (glucose SD 52) |
+
+Consequence of the cutoffs plus the data's wide "healthy" glucose (45% of never-diabetic values are at or
+above 126): even at beta = 0 a measurement after onset triggers a correct diabetes diagnosis about 45% of
+the time, so measuring more often shortens diabetes detection delay at beta = 0. That beta = 0 delay is
+the baseline RQ3 effects are measured against. In the 5,000-patient sample (seed 42), 301 of 729
+diagnosed diabetics were lab-detected at beta = 0 and 445 of 769 at beta = 1.
+
 ## Validation, before any experiment
 
 At beta = 0 the simulator must match the Kaggle data on:
