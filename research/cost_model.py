@@ -36,6 +36,11 @@ def lab_visit_cost(test_names) -> float:
     return PRICES[BLOOD_DRAW] + sum(PRICES[code] for code in codes)
 
 
+# The simulator returns every test at every lab visit (research/simulator.py), so a simulated
+# measurement pays for the full panel, not the data's average mix.
+FULL_PANEL_TESTS = list(TEST_TO_CODE)
+SIMULATOR_MEASUREMENT_COST = lab_visit_cost(FULL_PANEL_TESTS) + PRICES[OFFICE_VISIT]
+
 YEARS_OF_DATA = 7  # 2018-01-01 to 2024-12-31
 SCHEDULES_PER_YEAR = {"observed care": None, "12-month": 1, "6-month": 2, "3-month": 4}
 

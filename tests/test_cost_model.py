@@ -12,7 +12,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from research.cost_model import TEST_TO_CODE, lab_visit_cost
+from research.cost_model import FULL_PANEL_TESTS, SIMULATOR_MEASUREMENT_COST, TEST_TO_CODE, lab_visit_cost
 
 CMP_TESTS = ["glucose_fasting", "creatinine", "potassium", "sodium", "ALT", "AST"]
 CBC_TESTS = ["WBC", "hemoglobin"]
@@ -44,3 +44,10 @@ def test_every_lab_test_in_the_data_has_a_billing_code():
 
     names = set(pd.read_csv(labs, usecols=["test_name"])["test_name"].unique())
     assert names <= set(TEST_TO_CODE), names - set(TEST_TO_CODE)
+
+
+def test_simulator_full_panel_pays_every_code_once():
+    # draw 9.34 + CBC 7.77 + CMP 10.56 + lipids 13.39 + HbA1c 9.71 + BNP 39.26 + troponin 12.47 + TSH 16.80
+    assert set(FULL_PANEL_TESTS) == set(TEST_TO_CODE)
+    assert lab_visit_cost(FULL_PANEL_TESTS) == pytest.approx(119.30)
+    assert SIMULATOR_MEASUREMENT_COST == pytest.approx(119.30 + 95.19)

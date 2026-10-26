@@ -54,3 +54,13 @@ multiple of what the data's care costs, or against a fixed schedule.
   a limitation of any prediction-driven schedule.
 - The lab mix per measurement is the data's average mix. A controller that chose which tests to
   order would need per-test prices, which the code already supports through `lab_visit_cost`.
+
+## Simulated measurements (added 2026-10-26)
+
+The simulator returns all 17 tests at every lab visit (`research/simulator.py`), because the data's
+choice of tests gives each patient's diagnosis away. A simulated measurement therefore pays every code
+once: $119.30 for the labs plus the $95.19 visit, **$214.49**
+(`SIMULATOR_MEASUREMENT_COST`). BNP ($39.26) is the largest lab item. Fixed schedules cost $214, $429
+and $858 per patient-year (12-, 6- and 3-month), and background care at the data's 0.37 visits per
+year costs $79. Experiments in the simulator use this price; $139.76 stays the price for the Kaggle
+data's own mix.
