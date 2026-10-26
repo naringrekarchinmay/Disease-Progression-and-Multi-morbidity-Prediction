@@ -230,7 +230,7 @@ spread 1.17 and 1.10. Fixed schedules are 1.00 by construction; the guideline is
    (RQ2: the threshold rule did not beat a fixed 12-month schedule).
 2. **The spread rule beats the guideline slightly on detection at beta 0.5 and 1** (11.9 against 12.8,
    9.7 against 10.1 months) at the same cost. That is the one place an uncertainty rule earns its keep.
-   It loses again at beta 2 and costs 0.02 to 0.03 AUROC everywhere.
+   It loses again at beta 2 and costs 0.02 to 0.03 AUROC from beta 0.25 on.
 3. **The closeness rule gets worse as labs get more informative**: at the 12-month budget its delay goes
    from 10.4 months at beta 1 to 13.4 at beta 2, and diabetes delay reaches 26.9, worse than observed care.
    This is a mechanism, not noise. When labs are informative, a patient with rising values gets a risk
@@ -240,9 +240,9 @@ spread 1.17 and 1.10. Fixed schedules are 1.00 by construction; the guideline is
 4. **Adaptive rules cost prediction accuracy.** They concentrate visits on some patients and leave others
    unmeasured before the cutoff, and the progression predictor does better with even coverage.
 5. **RQ4: the two signals send visits to opposite age groups**, as in the September equity audit with the
-   GRU's dropout SD. Closeness under-measures under-50s by 24% to 46%. Spread over-measures them by 5% to
+   GRU's dropout SD. Closeness under-measures under-50s by 12% to 46%. Spread over-measures them by 5% to
    30%. The choice of uncertainty measure, not the data, decides who is monitored.
-6. At beta 0, all rules are within 0.5 months and 0.006 AUROC of each other and of the fixed schedules, as
+6. At beta 0, all rules are within 0.6 months and 0.006 AUROC of each other and of the fixed schedules, as
    expected when labs carry no information.
 
 ## Limits
