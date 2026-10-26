@@ -114,3 +114,68 @@ https://doi.org/10.1016/j.jacc.2013.11.005
 
 US Preventive Services Task Force. (2021). Screening for prediabetes and type 2 diabetes: US Preventive
 Services Task Force recommendation statement. *JAMA, 326*(8), 736-743. https://doi.org/10.1001/jama.2021.12531
+
+---
+
+# Beta sweep, part 2: prediction under each schedule (W7-2, task 17)
+
+Added 2026-10-26. Code: `research/simulator_prediction.py`. Tests: `tests/test_simulator_prediction.py`.
+Table: `outputs/tables/simulator_sweep_prediction.csv` (100,000 patients, seed 42; 28 minutes).
+
+## Setup
+
+- **Labels from truth, the same for every schedule.** A patient is at risk if fewer than two conditions have
+  truly begun by 2021-12-31 (true onset for the four lab-linked conditions, the copied diagnosis date for
+  the other 11), and progresses if two or more have begun by 2024-12-31. True at-risk cohort 38,553;
+  progression 51.6% (against 44.4% on diagnosis-based labels, because undiagnosed onsets now count).
+- **Features are what the schedule saw by the cutoff**: its lab visits up to 2021-12-31, the diagnoses those
+  visits and clinical presentation produced, and medications from diagnosis. They are built with the
+  unchanged `src/features.py`, in 20,000-patient chunks (tested equal to one pass).
+- **One calibrated XGBoost per schedule** (a model deployed under a schedule is trained on data collected
+  under it), all on one patient split (test 9,639), so AUROC differences are paired. Standard errors of
+  differences are a 200-draw bootstrap of the test patients; they leave out model-refit variance, so they
+  understate the true uncertainty.
+- Added a **no labs** schedule (no measurements at all) as the floor. Random visits use one seed here.
+  Spend counts pre-cutoff visits only (2018-2021), so the guideline's figure differs from part 1's.
+
+## Results
+
+AUROC (Brier in brackets; spend per patient-year over 2018-2021).
+
+| Schedule | spend | beta 0 | 0.25 | 0.5 | 1 | 2 |
+|---|---|---|---|---|---|---|
+| No labs | $0 | 0.748 (0.204) | 0.748 | 0.748 | 0.748 | 0.748 |
+| Observed care | $79 | 0.742 (0.206) | 0.752 | 0.754 | 0.757 (0.200) | 0.760 |
+| Guideline | $116-131 | 0.742 | 0.765 | 0.772 | 0.777 (0.192) | 0.784 |
+| 12-month | $214 | 0.738 | 0.764 | 0.772 | 0.776 (0.192) | 0.785 |
+| Random, matched to 12-month | $215 | 0.741 | 0.760 | 0.765 | 0.769 (0.195) | 0.774 |
+| 6-month | $429 | 0.738 | 0.768 | 0.774 | 0.782 (0.190) | 0.793 |
+| 3-month | $858 | 0.739 | 0.771 | 0.779 | 0.786 (0.188) | 0.800 |
+
+Gain over observed care at beta 1 (bootstrap SE): 3-month +0.029 (0.003), 6-month +0.025 (0.003),
+12-month +0.019 (0.002), guideline +0.020 (0.003), random +0.011 (0.002). Calibration slopes stay between
+0.93 and 1.00 throughout.
+
+## Reading
+
+1. **At beta 0 every measured schedule scores slightly below no labs** (0.006 to 0.010 AUROC, against a
+   bootstrap SE near 0.0015). The schedules agree with each other within 0.004. Uninformative lab columns
+   cost the untuned XGBoost a little; the W6-3 smoke run showed the same (0.0045). It is a reason to keep
+   the hyperparameter search planned for week 8, not evidence that labs mislead.
+2. **From beta 0.25 on, measuring more predicts better, with diminishing returns.** At beta 1, going from
+   observed care to 12-month buys 0.019 AUROC for $135 more per year; from 12-month to 3-month buys 0.010
+   more for $644.
+3. **The guideline matches the 12-month schedule at about 60% of its cost** (beta 1: 0.777 against 0.776,
+   $131 against $214). It spends its visits on people with known diabetes or kidney disease and on
+   over-35s.
+4. **Regular spacing beats random spacing at the same spend** (beta 1: 0.776 against 0.769; beta 2: 0.785
+   against 0.774), consistent with part 1's detection delays.
+5. Even the 3-month schedule at beta 2 reaches only 0.800. Most of the progression signal sits in the other
+   11 conditions and the covariates, which no schedule changes.
+
+## Limits
+
+- One seed, one split and default XGBoost settings. Differences of 0.005 or less should not be read as real.
+- Random visits use one seed for prediction (three in part 1).
+- Medication templates for newly lab-detected patients are drawn per chunk, so medication features can
+  differ slightly between schedules for the same patient.

@@ -28,7 +28,8 @@ KAGGLE_COLUMNS = {
                     "reference_high", "flag", "is_abnormal", "delta_from_normal"],
     "medications": ["patient_id", "medication", "dose", "unit", "frequency", "indication", "start_date",
                     "duration_days", "is_generic", "adherence_pct"],
-    "outcomes": ["patient_id", "admission_date", "discharge_date", "length_of_stay_days"],
+    "outcomes": ["patient_id", "admission_date", "discharge_date", "length_of_stay_days", "icu_admission",
+                 "readmitted_30d"],
 }
 
 
@@ -79,7 +80,8 @@ def source() -> dict[str, pd.DataFrame]:
          "adherence_pct": 90.0},
     ])
     outcomes = pd.DataFrame({"patient_id": ["P3"], "admission_date": ["2022-05-06"],
-                             "discharge_date": ["2022-05-08"], "length_of_stay_days": [2]})
+                             "discharge_date": ["2022-05-08"], "length_of_stay_days": [2],
+                             "icu_admission": [0], "readmitted_30d": [1]})
     return clean_all({"patients": patients, "diagnoses": diagnoses, "lab_results": labs,
                       "medications": medications, "outcomes": outcomes})
 

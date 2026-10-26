@@ -332,48 +332,106 @@ def simulate_cohort(source: dict[str, pd.DataFrame], params: SimulatorParams, n_
     mapping = pd.DataFrame({"patient_id": [f"S{i + 1:07d}" for i in range(n_patients)],
                             "source_patient_id": source_ids})
 
-    def copy(table: pd.DataFrame) -> pd.DataFrame:
-        out = mapping.merge(table.rename(columns={"patient_id": "source_patient_id"}), on="source_patient_id")
-        return out.drop(columns="source_patient_id")[table.columns]
-
-    lab_cols = source["lab_results"].columns
-    visits = copy(source["lab_results"][["patient_id", "test_date"]].drop_duplicates())
+    visits = _copy(mapping, source["lab_results"][["patient_id", "test_date"]].drop_duplicates())
     visits = visits.sort_values(["patient_id", "test_date"]).reset_index(drop=True)
 
     truth = _draw_truth(mapping, source, params, visits, rng)
     truth["clinical_date"] = truth["clinical_date"].where(truth["clinical_month"] < N_MONTHS)
+    return build_tables(source, params, mapping, truth, visits, beta, rng)
 
+
+def _copy(mapping: pd.DataFrame, table: pd.DataFrame) -> pd.DataFrame:
+    out = mapping.merge(table.rename(columns={"patient_id": "source_patient_id"}), on="source_patient_id")
+    return out.drop(columns="source_patient_id")[table.columns]
+
+
+def build_tables(source: dict[str, pd.DataFrame], params: SimulatorParams, mapping: pd.DataFrame,
+                 truth: pd.DataFrame, visits: pd.DataFrame, beta: float, rng: np.random.Generator,
+                 crn_seed: int | None = None) -> tuple[dict[str, pd.DataFrame], pd.DataFrame]:
+    """Five tables for the patients in `mapping`, given their truth and the lab visits that happen.
+
+    With crn_seed, lab noise is a common random number per (patient, month, test) instead of a draw
+    from rng, so schedules that share a visit month share its values (research/simulator_sweep.py).
+    """
+    lab_cols = source["lab_results"].columns
     tests = params.labs.index.to_numpy()
+    visits = visits[["patient_id", "test_date"]].reset_index(drop=True)
     labs = visits.loc[visits.index.repeat(len(tests))].reset_index(drop=True)
     labs["test_name"] = np.tile(tests, len(visits))
     labs["condition"] = labs["test_name"].map(SIGNAL_TESTS)
     labs = labs.merge(truth[["patient_id", "condition", "onset_month"]], on=["patient_id", "condition"], how="left")
     window = labs["condition"].map(params.window).fillna(1).to_numpy()
-    severity = latent_severity(month_index(labs["test_date"]), labs["onset_month"].to_numpy(), window)
-    labs["value"] = draw_lab_values(params, tests=labs["test_name"].to_numpy(), severity=severity, beta=beta, rng=rng)
+    months = month_index(labs["test_date"])
+    severity = latent_severity(months, labs["onset_month"].to_numpy(), window)
+    names = labs["test_name"].to_numpy()
+    if crn_seed is None:
+        labs["value"] = draw_lab_values(params, tests=names, severity=severity, beta=beta, rng=rng)
+    else:
+        z = crn_normal(patient_number(labs["patient_id"]), months, crn_test_index(names), crn_seed)
+        meta = params.labs.loc[names]
+        values = lab_means(params, names, severity, beta) + meta["healthy_sd"].to_numpy() * z
+        labs["value"] = np.round(np.maximum(values, meta["floor"].to_numpy()), 3)
     meta = params.labs.loc[labs["test_name"], ["unit", "reference_low", "reference_high"]].reset_index(drop=True)
     labs = pd.concat([labs, meta, lab_flags(params, labs["test_name"].to_numpy(), labs["value"].to_numpy())], axis=1)
 
     truth = detect(truth, labs)
 
-    patients = copy(source["patients"])
+    patients = _copy(mapping, source["patients"])
     diagnosed = truth.assign(flag=truth["diagnosis_date"].notna().astype(int)).pivot(
         index="patient_id", columns="condition", values="flag")
     for condition in LAB_CONDITIONS:
         if f"dx_{condition}" in patients.columns:
             patients[f"dx_{condition}"] = patients["patient_id"].map(diagnosed[condition]).astype(int)
 
-    diagnoses = _rewrite_diagnoses(copy(source["diagnoses"]), truth)
+    diagnoses = _rewrite_diagnoses(_copy(mapping, source["diagnoses"]), truth)
     tables = {
         "patients": patients,
         "diagnoses": diagnoses,
         "lab_results": labs[lab_cols].sort_values(["patient_id", "test_date"], kind="stable").reset_index(drop=True),
         "medications": _build_medications(source["medications"], mapping, diagnoses, truth, params, rng),
-        "outcomes": copy(source["outcomes"]),
+        "outcomes": _copy(mapping, source["outcomes"]),
     }
     truth = truth[["patient_id", "source_patient_id", "condition", "onset_month", "clinical_month", "lag_months",
                    "clinical_date", "diagnosis_date", "diagnosis_month", "route"]]
     return tables, truth.sort_values(["patient_id", "condition"]).reset_index(drop=True)
+
+
+# --- common random numbers -------------------------------------------------------------------
+
+# Trigger tests first, so their indices match research/simulator_sweep.py's detection-only runs.
+CRN_TESTS = list(TRIGGERS) + sorted(["ALT", "AST", "HDL", "TSH", "WBC", "creatinine", "hemoglobin", "potassium",
+                                     "sodium", "total_cholesterol", "triglycerides", "troponin_I"])
+
+
+def crn_test_index(names) -> np.ndarray:
+    lookup = {t: i for i, t in enumerate(CRN_TESTS)}
+    return pd.Series(names).map(lookup).astype(np.int64).to_numpy()  # an unknown test fails loudly
+
+
+def patient_number(patient_ids) -> np.ndarray:
+    return pd.Series(patient_ids).str[1:].astype(np.int64).to_numpy()
+
+
+def _splitmix(x: np.ndarray) -> np.ndarray:
+    x = (x + np.uint64(0x9E3779B97F4A7C15)).astype(np.uint64)
+    x = (x ^ (x >> np.uint64(30))) * np.uint64(0xBF58476D1CE4E5B9)
+    x = (x ^ (x >> np.uint64(27))) * np.uint64(0x94D049BB133111EB)
+    return x ^ (x >> np.uint64(31))
+
+
+def crn_uniform(pnum, month, test, seed: int, stream: int = 0) -> np.ndarray:
+    with np.errstate(over="ignore"):
+        key = (np.asarray(pnum, dtype=np.uint64) * np.uint64(1_000_003)
+               + np.asarray(month, dtype=np.int64).astype(np.uint64) * np.uint64(97)
+               + np.asarray(test, dtype=np.uint64)) * np.uint64(4) + np.uint64(stream)
+        bits = _splitmix(_splitmix(key ^ _splitmix(np.full(key.shape, seed, dtype=np.uint64))))
+    return ((bits >> np.uint64(11)).astype(np.float64) + 0.5) / float(1 << 53)
+
+
+def crn_normal(pnum, month, test, seed: int) -> np.ndarray:
+    """Standard normal draw that depends only on (patient, month, test, seed)."""
+    u1, u2 = crn_uniform(pnum, month, test, seed, 0), crn_uniform(pnum, month, test, seed, 1)
+    return np.sqrt(-2 * np.log(u1)) * np.cos(2 * np.pi * u2)
 
 
 def load_source() -> dict[str, pd.DataFrame]:

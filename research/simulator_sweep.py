@@ -49,6 +49,7 @@ class Cohort:
     truth: pd.DataFrame  # patient_id, condition, onset_month, clinical_date, clinical_month, ...
     ages: pd.Series  # age by patient_id
     observed: pd.DataFrame  # observed-care visits: patient_id, test_date
+    mapping: pd.DataFrame  # patient_id, source_patient_id
 
 
 def cohort_truth(source: dict[str, pd.DataFrame], params: sim.SimulatorParams, n_patients: int,
@@ -65,33 +66,12 @@ def cohort_truth(source: dict[str, pd.DataFrame], params: sim.SimulatorParams, n
     truth["clinical_date"] = truth["clinical_date"].where(truth["clinical_month"] < sim.N_MONTHS)
     ages = mapping.merge(source["patients"][["patient_id", "age"]].rename(columns={"patient_id": "source_patient_id"}),
                          on="source_patient_id").set_index("patient_id")["age"]
-    return Cohort(truth=truth, ages=ages, observed=visits)
+    return Cohort(truth=truth, ages=ages, observed=visits, mapping=mapping)
 
 
-def _pnum(patient_ids) -> np.ndarray:
-    return pd.Series(patient_ids).str[1:].astype(np.int64).to_numpy()
-
-
-def _splitmix(x: np.ndarray) -> np.ndarray:
-    x = (x + np.uint64(0x9E3779B97F4A7C15)).astype(np.uint64)
-    x = (x ^ (x >> np.uint64(30))) * np.uint64(0xBF58476D1CE4E5B9)
-    x = (x ^ (x >> np.uint64(27))) * np.uint64(0x94D049BB133111EB)
-    return x ^ (x >> np.uint64(31))
-
-
-def crn_uniform(pnum, month, test, seed: int, stream: int = 0) -> np.ndarray:
-    with np.errstate(over="ignore"):
-        key = (np.asarray(pnum, dtype=np.uint64) * np.uint64(1_000_003)
-               + np.asarray(month, dtype=np.int64).astype(np.uint64) * np.uint64(97)
-               + np.asarray(test, dtype=np.uint64)) * np.uint64(4) + np.uint64(stream)
-        bits = _splitmix(_splitmix(key ^ _splitmix(np.full(key.shape, seed, dtype=np.uint64))))
-    return ((bits >> np.uint64(11)).astype(np.float64) + 0.5) / float(1 << 53)
-
-
-def crn_normal(pnum, month, test, seed: int) -> np.ndarray:
-    """Standard normal draw that depends only on (patient, month, test, seed)."""
-    u1, u2 = crn_uniform(pnum, month, test, seed, 0), crn_uniform(pnum, month, test, seed, 1)
-    return np.sqrt(-2 * np.log(u1)) * np.cos(2 * np.pi * u2)
+_pnum = sim.patient_number
+crn_uniform = sim.crn_uniform
+crn_normal = sim.crn_normal
 
 
 def _phase(patient_ids: pd.Series, interval: int, seed: int) -> np.ndarray:
@@ -163,7 +143,7 @@ def measure(visits: pd.DataFrame, truth: pd.DataFrame, params: sim.SimulatorPara
     window = labs["condition"].map(params.window).to_numpy()
     severity = sim.latent_severity(month, labs["onset_month"].to_numpy(), window)
     names = labs["test_name"].to_numpy()
-    z = crn_normal(_pnum(labs["patient_id"]), month, pd.Series(names).map(TRIGGER_TESTS.index).to_numpy(), seed)
+    z = crn_normal(_pnum(labs["patient_id"]), month, sim.crn_test_index(names), seed)
     meta = params.labs.loc[names]
     values = sim.lab_means(params, names, severity, beta) + meta["healthy_sd"].to_numpy() * z
     labs["value"] = np.round(np.maximum(values, meta["floor"].to_numpy()), 3)
