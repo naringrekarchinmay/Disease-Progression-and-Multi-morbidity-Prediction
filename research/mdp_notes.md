@@ -142,3 +142,91 @@ report it.
 - One seed, one training cohort, default regressor settings, no confidence intervals yet.
 - The learned policy is evaluated in the same simulator it was trained on. That is in-distribution: it shows
   what is achievable when the model of disease is right, not robustness to a wrong one.
+
+---
+
+# Week 9, part 3: off-policy evaluation against the truth (W9-3, task 21)
+
+Added 2026-10-26. Code: `research/simulator_ope.py`. Tests: `tests/test_simulator_ope.py`. Table:
+`outputs/tables/simulator_ope.csv` (about 30 minutes).
+
+## Method
+
+Every estimate uses only the seed-42 logged dataset: 100,000 patients x 28 quarters under the behavior policy,
+with recorded propensities (0.85 or 0.05). Each is compared with the target's true value on the same patients.
+
+- **FQE**, the proposal's committed estimator (Le et al., 2019): backward induction on the logged rows with
+  the target's action in the next state, one XGBoost per action and quarter (80 trees, depth 4).
+- **WPDIS**: per-decision importance weights, normalized across patients at each quarter (Thomas &
+  Brunskill, 2016).
+- **WDR**: weighted doubly robust (Thomas & Brunskill, 2016, building on Jiang & Li, 2016), with FQE as the
+  model.
+- 95% percentile intervals for WPDIS and WDR from 200 patient bootstraps. FQE is not bootstrapped.
+- Targets: never measure, the quarterly guideline, the behavior policy itself (an on-policy check), and the
+  task 20 learned policies at $200 and $400, retrained identically (their true values reproduce task 20).
+  This gives 50 estimates per estimator: 5 targets x 5 betas x 2 lambdas for the fixed targets, and each
+  learned policy at its own lambda.
+
+## Results
+
+Median absolute relative error (largest in brackets):
+
+| Target | Support in the logs (final-quarter effective sample size) | FQE | WPDIS | WDR | FQI's own estimate |
+|---|---|---|---|---|---|
+| Behavior policy (on-policy) | 100,000 | 0.0% | 0.0% | 0.0% | |
+| Quarterly guideline | about 15,000 | 0.4% (0.7%) | 0.0% (0.4%) | 0.2% (0.5%) | |
+| Learned policies | 0 to 4 | 3.6% (6.5%) | 19% (46%) | 16% (36%) | 19% (28%) |
+| Never measure | 0 | 4.9% (76%) | 57% | 24% (29%) | |
+
+Bootstrap intervals cover the truth for the guideline and the on-policy check every time. For the learned
+policies they cover it 70% (WPDIS) and 90% (WDR) of the time; for never measure 0% and 40%.
+
+**Choosing the best policy.** In all 10 beta-lambda settings the true best policy is the learned one. FQE
+picks it 10 times out of 10, WDR 7 and WPDIS 4. Over the full ordering of never measure, guideline and
+learned policy, FQE and WDR are right 7 times out of 10 and WPDIS never. FQE's misorderings are all
+between never measure and the guideline, in settings where their true values are within 1.5% of each
+other or where FQE's never-measure estimate fails (below).
+
+**FQE's failure.** For never measure at beta 1 and 2, FQE is off by 55% and 76% (beta 1, $200: estimated
+-4,397 against a true -2,834). The behavior policy measures almost everyone eventually, so the logs hold
+almost no late-quarter states of a patient who has never had a lab. FQE has to extrapolate there, and it
+extrapolates worse when labs matter more. At beta 0 to 0.5 the same target is within 5%.
+
+## Reading
+
+1. **FQE works where the proposal needs it.** For the learned policies, where the importance weights collapse
+   (effective sample size 0 to 4 out of 100,000), FQE is within 3.6% (median) of the truth, and it always
+   identifies the best policy. It is also far more accurate than the learned policy's own value estimate
+   (19% median error, always optimistic). The proposal's choice of FQE as the main estimator holds up, and the
+   pre-registered fallback is not needed for these targets.
+2. **Importance sampling fails for deterministic policies over 28 decisions.** A trajectory keeps weight only
+   if every one of its 28 logged actions matches the target. For the learned policies only 0 to 27 of 100,000
+   do. WPDIS then has nothing to average at late quarters, so it is biased, and its intervals do not reflect it.
+   WDR repairs part of this through the model, but not enough to trust it.
+3. **FQE is only as good as the logs' coverage.** It fails exactly where the target visits states the
+   behavior policy almost never produces (never measuring, when labs are informative). Coverage, not the
+   estimator, is the binding constraint. This is the support problem found with the Kaggle data in week 2,
+   now measured.
+4. All three estimators are exact on-policy, which checks the code.
+
+## Limits
+
+- One logged dataset and one behavior policy; FQE has no interval.
+- The truth is the simulator's. FQE was tested on data drawn from the same model it then estimates, so this
+  checks the estimator, not the simulator.
+
+## References
+
+Ernst, D., Geurts, P., & Wehenkel, L. (2005). Tree-based batch mode reinforcement learning. *Journal of Machine
+Learning Research, 6*, 503-556.
+
+Jiang, N., & Li, L. (2016). Doubly robust off-policy value evaluation for reinforcement learning. In
+*Proceedings of the 33rd International Conference on Machine Learning* (Vol. 48, pp. 652-661). PMLR.
+
+Le, H., Voloshin, C., & Yue, Y. (2019). Batch policy learning under constraints. In *Proceedings of the 36th
+International Conference on Machine Learning* (Vol. 97, pp. 3703-3712). PMLR.
+
+Thomas, P., & Brunskill, E. (2016). Data-efficient off-policy policy evaluation for reinforcement learning. In
+*Proceedings of the 33rd International Conference on Machine Learning* (Vol. 48, pp. 2139-2148). PMLR.
+
+(Ernst et al. is the fitted Q-iteration reference for part 2.)
