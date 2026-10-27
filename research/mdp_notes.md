@@ -164,8 +164,8 @@ with recorded propensities (0.85 or 0.05). Each is compared with the target's tr
 - 95% percentile intervals for WPDIS and WDR from 200 patient bootstraps. FQE is not bootstrapped.
 - Targets: never measure, the quarterly guideline, the behavior policy itself (an on-policy check), and the
   task 20 learned policies at $200 and $400, retrained identically (their true values reproduce task 20).
-  This gives 50 estimates per estimator: 5 targets x 5 betas x 2 lambdas for the fixed targets, and each
-  learned policy at its own lambda.
+  This gives 40 estimates per estimator: the three fixed targets at both lambdas and each learned policy at
+  its own lambda, at each of 5 betas.
 
 ## Results
 
@@ -184,8 +184,7 @@ policies they cover it 70% (WPDIS) and 90% (WDR) of the time; for never measure 
 **Choosing the best policy.** In all 10 beta-lambda settings the true best policy is the learned one. FQE
 picks it 10 times out of 10, WDR 7 and WPDIS 4. Over the full ordering of never measure, guideline and
 learned policy, FQE and WDR are right 7 times out of 10 and WPDIS never. FQE's misorderings are all
-between never measure and the guideline, in settings where their true values are within 1.5% of each
-other or where FQE's never-measure estimate fails (below).
+between never measure and the guideline, in settings where their true values are within 3% of each other.
 
 **FQE's failure.** For never measure at beta 1 and 2, FQE is off by 55% and 76% (beta 1, $200: estimated
 -4,397 against a true -2,834). The behavior policy measures almost everyone eventually, so the logs hold
