@@ -88,3 +88,49 @@ Sex stays within 0.96 to 1.04 under both XGBoost signals; insurance within 0.82 
   signal moves monitoring between age groups" still holds, but its strong form ("a disagreement rule would
   measure under-50s three times as often and almost never 65-79s") describes the GRU only. The report must
   say which model each row comes from.
+
+## 5. Injected under-observation in the simulator (task 28, 2026-11-09)
+
+Section 1 showed the Kaggle history measures every subgroup equally, so RQ4's question (does a policy amplify
+existing under-observation?) needs the gap injected. Code: `research/simulator_equity.py` (design, outcomes and
+the amplification rule written in its docstring and committed, 8aa805a, before the run). Tables:
+`outputs/tables/simulator_equity.csv`, `simulator_equity_amplification.csv`.
+
+**Design (Chinmay's choices).** Subgroup: Medicaid and uninsured patients (28% of the cohort). In the logged
+history the learned policy trains on (the guideline-plus-exploration behavior policy) and in observed care,
+their per-quarter probability of being measured is multiplied by rho = 1 (control), 0.5 or 0.25. The disease
+process is untouched. Beta 1, lambda $200, three replicates (seeds 42/43 + 1000r), 100,000 evaluation and
+30,000 training patients. Intervals are t intervals over the three replicates.
+
+**Realised gap.** Because an overdue patient stays due every quarter until measured, scaling the per-quarter
+probability delays care more than it removes it: the history measures the subgroup at 0.76 (rho 0.5) and 0.56
+(rho 0.25) of the others' rate, with detection 0.7 and 1.6 months later. Thinned observed care is cruder (0.50
+and 0.25 of the rate, 1.8 and 3.0 months later).
+
+| Policy, rho = 0.25 | Subgroup / rest measurements | Delay gap, months (95% interval) |
+|---|---|---|
+| Observed care (thinned) | 0.25 | +3.0 (2.5 to 3.5) |
+| History (behavior policy) | 0.56 | +1.6 (1.3 to 1.9) |
+| **Learned policy, trained on that history** | **0.99 (0.95 to 1.02)** | **+0.1 (-0.3 to +0.5)** |
+| Guideline / 12-month (no history used) | 1.00 / 1.00 | -0.1 / 0.0 |
+
+At rho = 0.5 the learned policy's ratio is 0.98 (0.94 to 1.02) and its gap +0.07 months; at rho = 1, 0.99 and
++0.08.
+
+**Amplification rule (pre-stated): not met.** The learned policy's subgroup-to-rest ratio is *higher* than its
+history's by 0.42 (0.39 to 0.45) at rho 0.25 and 0.22 (0.19 to 0.24) at rho 0.5, and its delay gap does not
+grow with rho (change against rho = 1: +0.02, -0.08 to +0.10, at rho 0.25).
+
+**Reading.**
+- **The learned policy does not inherit the injected gap; it removes it.** It decides from each patient's
+  current state (time since the last lab, known conditions, recent values, age), and a patient who was
+  measured less looks *more* overdue, not less important. Fitted Q-iteration's reward depends on undiagnosed
+  disease, which the subgroup has as much of as anyone.
+- **The thinner history does change the policy for everyone.** Trained on rho = 0.25 logs it measures
+  everyone less (0.41 against 0.53 a year) and detection is about 0.3 months later in both groups. Its value
+  per patient does not fall (-$1,505 against -$1,637 at rho 1, within the spread of retraining), so this is a
+  shift along the cost-delay trade-off, not a harm aimed at the subgroup.
+- **Limits.** The subgroup's disease process is the same as everyone else's, so the experiment tests
+  amplification of a *measurement* gap only. Real under-observed groups also differ in risk and in how disease
+  presents, and the learned reward uses true onset dates that real records lack. A policy trained on observed
+  care directly, rather than on a guideline-based history, was not tested. The data has no race field.
