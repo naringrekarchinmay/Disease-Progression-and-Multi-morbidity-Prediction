@@ -123,10 +123,12 @@ def guideline_policy(cohort: sweep.Cohort, seed: int):
 
 
 def logged_dataset(cohort: sweep.Cohort, source: dict[str, pd.DataFrame], params: sim.SimulatorParams, beta: float,
-                   seed: int, static: pd.DataFrame | None = None, other: np.ndarray | None = None) -> pd.DataFrame:
-    """One row per patient-quarter under the behavior policy: state, action, propensity, reward
-    components and the next state's features."""
-    run = pol.run_policy(cohort, source, params, beta, seed, policy_fn=behavior_policy(cohort, seed), record=True,
+                   seed: int, static: pd.DataFrame | None = None, other: np.ndarray | None = None,
+                   policy_fn=None) -> pd.DataFrame:
+    """One row per patient-quarter under the behavior policy (or `policy_fn`, a stochastic policy returning
+    action and propensity): state, action, propensity, reward components and the next state's features."""
+    policy_fn = behavior_policy(cohort, seed) if policy_fn is None else policy_fn
+    run = pol.run_policy(cohort, source, params, beta, seed, policy_fn=policy_fn, record=True,
                          static=static, other=other)
     snaps = run.snapshots.assign(quarter=lambda s: s["month"] // 3)
     comp = quarter_components(run.detected, run.visits, cohort.ages.index)
