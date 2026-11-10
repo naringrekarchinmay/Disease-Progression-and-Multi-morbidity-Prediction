@@ -83,3 +83,15 @@ BNP,heart_failure,2-3,375,328,47.768,49.877,0.4783552200685304,0.004969684966812
 BNP,heart_failure,3-4,278,241,51.1785,49.877,0.5031349119392041,0.004969684966812352,constrained to window W
 BNP,heart_failure,4-5,176,149,48.807500000000005,49.877,0.47643574586283116,0.004969684966812352,constrained to window W
 BNP,heart_failure,5-10,98,87,50.15,49.877,0.5082577468266827,0.004969684966812352,constrained to window W
+creatinine,chronic_kidney_disease,0-1,3319,2823,5.733,0.905,0.9820177802631751,-0.34393308297265957,"universal panel, constrained to W"
+creatinine,chronic_kidney_disease,1-2,3282,2786,5.7455,0.905,0.9821503371612506,-0.34393308297265957,"universal panel, constrained to W"
+creatinine,chronic_kidney_disease,2-3,2792,2374,5.6795,0.905,0.9820383705542161,-0.34393308297265957,"universal panel, constrained to W"
+creatinine,chronic_kidney_disease,3-4,1783,1542,5.938,0.905,0.9825103085803403,-0.34393308297265957,"universal panel, constrained to W"
+creatinine,chronic_kidney_disease,4-5,1063,898,0.902,0.905,0.4964995107658649,-0.34393308297265957,"universal panel, constrained to W"
+creatinine,chronic_kidney_disease,5-10,775,630,0.901,0.905,0.48987190850088613,-0.34393308297265957,"universal panel, constrained to W"
+glucose_fasting,type2_diabetes,0-1,2528,2120,171.6755,115.477,0.7255174420869098,-0.27271171574578407,"universal panel, constrained to W"
+glucose_fasting,type2_diabetes,1-2,2485,2107,168.687,115.477,0.7161775700277633,-0.27271171574578407,"universal panel, constrained to W"
+glucose_fasting,type2_diabetes,2-3,2147,1836,170.994,115.477,0.7227509170972968,-0.27271171574578407,"universal panel, constrained to W"
+glucose_fasting,type2_diabetes,3-4,1427,1230,115.767,115.477,0.5071661166908932,-0.27271171574578407,"universal panel, constrained to W"
+glucose_fasting,type2_diabetes,4-5,979,840,121.409,115.477,0.5169075877275703,-0.27271171574578407,"universal panel, constrained to W"
+glucose_fasting,type2_diabetes,5-10,633,511,113.847,115.477,0.501251700107332,-0.27271171574578407,"universal panel, constrained to W"

@@ -43,9 +43,49 @@ simulator agree) with a random draw from that test's values in never-diagnosed p
 49,483 of 2,827,722 lab rows change. After it, AUROC outside W is 0.49 to 0.51 for every test; inside W it is
 unchanged.
 
-What the constraint does not fix, to state in the report:
+**Inside W the jump is still a step, not a rise**: a kidney patient's creatinine goes from normal to 5.7 at
+W months before diagnosis. The constraint caps how early labs can warn; it does not make the magnitudes
+realistic. State this in the report.
 
-- **Inside W the jump is still a step, not a rise**: a kidney patient's creatinine goes from normal to 5.7
-  at W months before diagnosis. It caps how early labs can warn; it does not make the magnitudes realistic.
-- **Which tests were ordered still gives the diagnosis away** (HbA1c, eGFR, HDL and triglycerides are
-  ordered almost only for diagnosed or future patients). The constraint changes values, not ordering.
+## Task 23: the second leak, and results with and without the artifact
+
+**The first attempt backfired.** Applied to all 17 tests, the constraint *raised* the calibrated XGBoost's
+AUROC from 0.8276 to 0.8365. Single lab features got weaker (creatinine 0.590 to 0.575, glucose 0.686 to
+0.675 among patients without that condition at baseline), so the gain came from somewhere else: **which tests
+were ordered**. Among at-risk patients without hyperlipidemia at baseline, those with any LDL test progress
+at 0.546 against 0.264 overall, because LDL is ordered almost only for patients who are or will be
+hyperlipidemic. After the constraint, "LDL ordered but normal" occurs almost only for future cases
+(progression 0.618), a fingerprint the constraint itself created. HbA1c, eGFR, HDL, triglycerides and BNP
+are ordered the same way.
+
+**Fix (Chinmay's choice, 2026-11-09).** Two new lab versions, built by `research.lead_time.lab_version`:
+
+- **panel**: keep only the eight tests drawn at every lab visit (glucose, creatinine, WBC, sodium, potassium,
+  ALT, AST, hemoglobin; 257,664 rows each). Removes the ordering leak.
+- **panel_w**: that panel with glucose and creatinine older than W replaced as above. Removes the lead-time
+  artifact as well.
+
+Code: `research/lab_constraint.py`; features in `data/processed/modeling_dataset_{panel,panel_w}.csv`;
+frontiers in `outputs/tables/scheduling_frontier_masking_{panel,panel_w}.csv`. Same splits and seeds; the
+check that patients, targets and every non-lab feature are identical passes for both.
+
+| Labs | Calibrated XGBoost AUROC | Brier | Keep none | Labs' contribution (keep all - keep none) |
+|---|---|---|---|---|
+| All 17 tests (original) | 0.8276 | 0.1670 | 0.8172 | 0.0104 |
+| Universal panel | 0.8267 | 0.1673 | 0.8168 | 0.0099 |
+| Universal panel, constrained to W | 0.8284 | 0.1669 | 0.8175 | 0.0109 |
+
+Masking frontier (Table 2) in the same three versions, AUROC:
+
+| Schedule | Original | Panel | Panel + W |
+|---|---|---|---|
+| 12-month | 0.8281 | 0.8265 | 0.8282 |
+| Threshold tau 0.2 / matched random | 0.8250 / 0.8229 | 0.8245 / 0.8221 | 0.8251 / 0.8234 |
+| Threshold tau 0.3 / matched random | 0.8271 / 0.8261 | 0.8263 / 0.8250 | 0.8270 / 0.8263 |
+
+**Reading.** Removing both artifacts leaves Table 2's conclusions where they were: labs add about 0.01 AUROC,
+the threshold rule edges budget-matched random visits, and a fixed 12-month schedule does as well as keeping
+every lab. The lead-time artifact matters little for this target because W (24 to 48 months) is about as
+long as the three-year prediction horizon, so most pre-cutoff labs of future cases already fall inside W.
+What the constraint cannot remove is the size of the jump inside W. Whether the small gaps between versions
+are real is answered by the task 24 bootstrap (`research/ci_notes.md`).

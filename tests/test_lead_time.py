@@ -84,3 +84,16 @@ def test_constraint_is_reproducible_by_seed():
     a = constrain_labs(labs, first, window_months={"chronic_kidney_disease": 24}, tests=TESTS, seed=5)
     b = constrain_labs(labs, first, window_months={"chronic_kidney_disease": 24}, tests=TESTS, seed=5)
     pd.testing.assert_frame_equal(a, b)
+
+
+def test_lab_versions_keep_only_the_universal_panel_and_constrain_it():
+    from research.lead_time import UNIVERSAL_PANEL, lab_version
+
+    labs, first = _cohort(lambda years: 3.0, n=30)
+    ldl = labs.assign(test_name="LDL")
+    both = pd.concat([labs, ldl], ignore_index=True)
+    assert lab_version(both, first, "original") is both
+    panel = lab_version(both, first, "panel")
+    assert set(panel["test_name"]) <= set(UNIVERSAL_PANEL) and len(panel) == len(labs)
+    panel_w = lab_version(both, first, "panel_w")
+    assert panel_w.attrs["replaced"] > 0 and len(panel_w) == len(labs)

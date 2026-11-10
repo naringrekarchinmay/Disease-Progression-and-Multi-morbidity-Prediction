@@ -10,7 +10,8 @@ scored against every lab of patients never diagnosed with that condition.
 `constrain_labs` builds the comparison data for task 23: a linked lab drawn earlier than the
 simulator's onset window W before diagnosis is replaced by a value drawn from the
 never-diagnosed patients' values for the same test, so labs may show a disease only as far
-ahead as the simulator lets them.
+ahead as the simulator lets them. On its own it leaves a second leak (which tests were ordered),
+so task 23 applies it to the universal panel only (`lab_version`).
 
     python -m research.lead_time
 
@@ -38,6 +39,10 @@ MIN_LABS_PER_BIN = 20
 LINKED_TESTS = {"creatinine": "chronic_kidney_disease", "eGFR": "chronic_kidney_disease",
                 "glucose_fasting": "type2_diabetes", "HbA1c": "type2_diabetes",
                 "LDL": "hyperlipidemia", "total_cholesterol": "hyperlipidemia", "BNP": "heart_failure"}
+# The eight tests drawn at every Kaggle lab visit (257,664 rows each). Every other test is ordered
+# mostly for patients who are or will be diagnosed, so whether it was ordered leaks the diagnosis.
+UNIVERSAL_PANEL = ("glucose_fasting", "creatinine", "WBC", "sodium", "potassium", "ALT", "AST", "hemoglobin")
+LAB_VERSIONS = ("original", "panel", "panel_w")
 # Sign that makes "more abnormal" score higher (eGFR falls with kidney disease).
 DIRECTION = {"eGFR": -1}
 DAYS_PER_MONTH = 365.25 / 12
@@ -116,6 +121,19 @@ def constrain_labs(labs: pd.DataFrame, first: pd.DataFrame, window_months=WINDOW
     return out
 
 
+def lab_version(labs: pd.DataFrame, first: pd.DataFrame, version: str, seed: int = rp.RANDOM_STATE) -> pd.DataFrame:
+    """'original': all labs; 'panel': only the universal panel; 'panel_w': the panel with linked labs
+    older than W replaced (constrain_labs)."""
+    if version == "original":
+        return labs
+    panel = labs[labs["test_name"].isin(UNIVERSAL_PANEL)].reset_index(drop=True)
+    if version == "panel":
+        return panel
+    if version == "panel_w":
+        return constrain_labs(panel, first, seed=seed)
+    raise ValueError(f"unknown lab version {version!r}; expected one of {LAB_VERSIONS}")
+
+
 def main() -> None:
     from research.calibration import write_results
     from research.data import load_clean_data
@@ -127,7 +145,9 @@ def main() -> None:
     original = lead_time_table(labs, first).assign(labs="original")
     constrained_labs = constrain_labs(labs, first)
     constrained = lead_time_table(constrained_labs, first).assign(labs="constrained to window W")
-    table = pd.concat([original, constrained], ignore_index=True)
+    panel_w = lab_version(labs, first, "panel_w")
+    panel = lead_time_table(panel_w, first).assign(labs="universal panel, constrained to W")
+    table = pd.concat([original, constrained, panel], ignore_index=True)
     rp.save_metrics(table, rp.TABLES_DIR / "lab_lead_time.csv")
     show = ["labs", "test", "years_before", "n_case_labs", "case_median", "control_median", "auroc",
             "spearman_value_vs_years"]

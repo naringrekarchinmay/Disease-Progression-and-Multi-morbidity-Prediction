@@ -7,8 +7,11 @@ reads medications therefore "predicts" future conditions from the drug list.
 
 The research pipeline uses data where a medication cannot start before its condition
 is diagnosed: earlier starts move to the diagnosis date, and medications for conditions
-never diagnosed in the record are dropped. Labs are left as they are; labs showing a
-disease before its diagnosis is the signal measurement scheduling depends on.
+never diagnosed in the record are dropped. Labs are left as they are by default. Task 22
+showed they carry the lifetime diagnosis at any lead time, and that which tests were ordered
+leaks it too (research/lead_time_notes.md), so `lab_version` selects "panel" (only the eight
+tests drawn at every visit) or "panel_w" (that panel with linked labs older than the
+simulator's onset window replaced by never-diagnosed draws); their features go to separate files.
 
 The original pipeline (src/, run_pipeline.py, models/*.joblib, notebooks) is unchanged
 and still describes the original data. Build the leak-free artifacts with:
@@ -25,6 +28,10 @@ from src.data_cleaning import clean_all, load_raw_data, make_condition_events
 
 PROCESSED = rp.PROJECT_ROOT / "data" / "processed"
 FEATURES_PATH = PROCESSED / "modeling_dataset_leakfree.csv"
+
+
+def features_path(lab_version: str = "original"):
+    return FEATURES_PATH if lab_version == "original" else PROCESSED / f"modeling_dataset_{lab_version}.csv"
 SEQUENCE_SUFFIX = "_leakfree"
 SEQUENCES_PATH = PROCESSED / f"sequences{SEQUENCE_SUFFIX}.parquet"
 
@@ -41,18 +48,24 @@ def align_medications_to_diagnoses(medications: pd.DataFrame, diagnoses: pd.Data
     return merged[medications.columns].reset_index(drop=True)
 
 
-def load_clean_data() -> dict[str, pd.DataFrame]:
-    """The five cleaned tables with medications aligned to diagnoses."""
+def load_clean_data(lab_version: str = "original") -> dict[str, pd.DataFrame]:
+    """The five cleaned tables with medications aligned to diagnoses, labs per `lab_version`."""
     data = clean_all(load_raw_data())
     data["medications"] = align_medications_to_diagnoses(data["medications"], data["diagnoses"])
+    if lab_version != "original":
+        from research.lead_time import first_diagnoses, lab_version as select
+
+        data["lab_results"] = select(data["lab_results"], first_diagnoses(data["diagnoses"]), lab_version)
     return data
 
 
-def load_features(sample: int | None = None) -> pd.DataFrame:
+def load_features(sample: int | None = None, lab_version: str = "original") -> pd.DataFrame:
     """Leak-free feature table, sampled like run_pipeline.load_feature_table."""
-    if not FEATURES_PATH.exists():
-        raise FileNotFoundError(f"{FEATURES_PATH} not found. Run: python -m research.data")
-    features = pd.read_csv(FEATURES_PATH)
+    path = features_path(lab_version)
+    if not path.exists():
+        hint = "python -m research.data" if lab_version == "original" else "python -m research.lab_constraint"
+        raise FileNotFoundError(f"{path} not found. Run: {hint}")
+    features = pd.read_csv(path)
     if sample is not None and sample < len(features):
         features = features.sample(n=sample, random_state=rp.RANDOM_STATE).reset_index(drop=True)
     return features

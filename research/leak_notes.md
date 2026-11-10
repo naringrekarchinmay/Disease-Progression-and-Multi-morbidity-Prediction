@@ -22,7 +22,8 @@ condition by finding its drug.
 A medication cannot start before its condition's first diagnosis: earlier starts move to the diagnosis
 date, and medications for conditions never diagnosed are dropped (296,506 medication rows kept). Labs
 are left as they are, because labs that show a disease before it is diagnosed are the signal measurement
-scheduling relies on. Targets are unchanged (checked in the tests). The original pipeline, its saved
+scheduling relies on. (Revisited 2026-11-09: that reasoning held only if the lead time was plausible, and it
+is not; labs also leak the diagnosis through which tests were ordered. See `research/lead_time_notes.md`.) Targets are unchanged (checked in the tests). The original pipeline, its saved
 models and the Task 3 audit notebook still describe the original data; the research pipeline reads
 `modeling_dataset_leakfree.csv` and `sequences_leakfree.parquet`.
 

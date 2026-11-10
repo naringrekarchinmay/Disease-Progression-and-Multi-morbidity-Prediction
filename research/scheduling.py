@@ -113,10 +113,26 @@ def features_as_of(data: dict[str, pd.DataFrame], as_of: pd.Series, labs: pd.Dat
     return features.reset_index()
 
 
+def model_path(lab_version: str = "original"):
+    suffix = "" if lab_version == "original" else f"_{lab_version}"
+    return rp.MODELS_DIR / f"{TARGET}_xgboost_isotonic{suffix}.joblib"
+
+
+def risks_path(lab_version: str = "original"):
+    """Per-patient test risks under every schedule, for patient-level bootstrap CIs (task 24)."""
+    suffix = "" if lab_version == "original" else f"_{lab_version}"
+    return rp.PROJECT_ROOT / "data" / "processed" / f"masking_test_risks{suffix}.parquet"
+
+
+def baseline_path(lab_version: str = "original"):
+    suffix = "" if lab_version == "original" else f"_{lab_version}"
+    return rp.PROJECT_ROOT / "data" / "processed" / f"baseline_test_predictions_{TARGET}{suffix}.parquet"
+
+
 class Scorer:
     """Scores a schedule on the test split with the calibrated XGBoost."""
 
-    def __init__(self):
+    def __init__(self, lab_version: str = "original"):
         import joblib
 
         from research.calibration import calibration_splits, score_metrics
@@ -124,18 +140,23 @@ class Scorer:
         from src.data_cleaning import clean_all, load_raw_data
 
         self.score_metrics = score_metrics
-        from research.data import align_medications_to_diagnoses, load_features
+        from research.data import align_medications_to_diagnoses, load_clean_data, load_features
 
-        features = load_features()
+        features = load_features(lab_version=lab_version)
         X_test, y_test = calibration_splits(features, TARGET)["test"]
         self.test_ids = features.loc[X_test.index, "patient_id"].tolist()
         self.y = y_test.to_numpy()
         self.columns = [c for c in features.columns if c not in TARGET_COLUMNS]
-        self.model = joblib.load(rp.MODELS_DIR / f"{TARGET}_xgboost_isotonic.joblib")
+        self.model = joblib.load(model_path(lab_version))
         raw = load_raw_data()
         ids = set(self.test_ids)
-        self.data = clean_all({name: t[t["patient_id"].isin(ids)] for name, t in raw.items()})
-        self.data["medications"] = align_medications_to_diagnoses(self.data["medications"], self.data["diagnoses"])
+        if lab_version != "original":
+            # The constraint draws from every never-diagnosed patient, so apply it to the full data first.
+            full = load_clean_data(lab_version)
+            self.data = {name: t[t["patient_id"].isin(ids)].reset_index(drop=True) for name, t in full.items()}
+        else:
+            self.data = clean_all({name: t[t["patient_id"].isin(ids)] for name, t in raw.items()})
+            self.data["medications"] = align_medications_to_diagnoses(self.data["medications"], self.data["diagnoses"])
         self.labs = self.data["lab_results"]
         self.opps = lab_opportunities(self.labs, self.test_ids)
         self.age_band = subgroups(raw["patients"]).set_index("patient_id")["age_band"]
@@ -158,6 +179,7 @@ class Scorer:
     def score(self, keep: pd.Series) -> dict:
         as_of = pd.Series(SCORE_DATE, index=self.test_ids)
         risk = self.predict(as_of, self.kept_labs(keep)).loc[self.test_ids].to_numpy()
+        self.last_risk = risk
         n_kept = int(keep.sum())
         per_year = n_kept / len(self.test_ids) / INPUT_YEARS
         kept_by_age = keep.groupby(self.opps["patient_id"].map(self.age_band), observed=True).mean()
@@ -206,36 +228,53 @@ def plot_frontier(table: pd.DataFrame) -> None:
     plt.close(fig)
 
 
+def run_frontier(scorer: Scorer, lab_version: str = "original") -> pd.DataFrame:
+    """Every controller's row of the masking frontier for one version of the data."""
+    start = time.perf_counter()
+    opps = scorer.opps
+    print(f"Test patients {len(scorer.test_ids):,} | decision points {len(opps):,} | "
+          f"max visits per patient {int(opps['k'].max()) + 1} | setup {time.perf_counter() - start:.0f}s")
+
+    rows, risks = [], {}
+
+    def add(controller: str, setting: str, keep: pd.Series, column: str | None = None) -> dict:
+        row = {"controller": controller, "setting": setting, **scorer.score(keep)}
+        risks[column or f"{controller} {setting}".strip()] = scorer.last_risk
+        return row
+
+    keep_all = pd.Series(True, index=opps.index)
+    rows.append(add("keep all (observed)", "", keep_all))
+    baseline = pd.read_parquet(baseline_path(lab_version))
+    expected = scorer.score_metrics(baseline["y_true"].to_numpy(), baseline["y_score"].to_numpy())["roc_auc"]
+    assert abs(rows[0]["roc_auc"] - expected) < 1e-9, (rows[0]["roc_auc"], expected)
+    rows.append(add("keep none", "", pd.Series(False, index=opps.index)))
+    for months, days in [("6-month", 182), ("12-month", 365)]:
+        rows.append(add("fixed interval", months, fixed_interval_keep(opps, days)))
+
+    for tau in TAUS:
+        keep = threshold_policy(opps, scorer.risk_fn, tau)
+        rows.append(add("threshold", f"tau={tau}", keep))
+        randoms = pd.DataFrame([add("random", "", random_keep(opps, int(keep.sum()), seed),
+                                    column=f"random matched to tau={tau} seed={seed}")
+                                for seed in RANDOM_SEEDS])
+        randoms = randoms.drop(columns=["controller", "setting"])
+        row = {"controller": "random (matched)", "setting": f"matched to tau={tau}", **randoms.mean().to_dict()}
+        row.update({f"{m}_sd": randoms[m].std() for m in ["roc_auc", "brier"]})
+        rows.append(row)
+        print(f"  tau {tau}: kept {int(keep.sum()):,} | threshold AUROC {rows[-2]['roc_auc']:.4f} "
+              f"| random {row['roc_auc']:.4f} +/- {row['roc_auc_sd']:.4f} | {time.perf_counter() - start:.0f}s",
+              flush=True)
+    pd.DataFrame({"patient_id": scorer.test_ids, "y_true": scorer.y, **risks}).to_parquet(
+        risks_path(lab_version), index=False)
+    return pd.DataFrame(rows)
+
+
 def main() -> None:
     from research.calibration import write_results
 
     start = time.perf_counter()
     scorer = Scorer()
-    opps = scorer.opps
-    print(f"Test patients {len(scorer.test_ids):,} | decision points {len(opps):,} | "
-          f"max visits per patient {int(opps['k'].max()) + 1} | setup {time.perf_counter() - start:.0f}s")
-
-    rows = []
-    keep_all = pd.Series(True, index=opps.index)
-    rows.append({"controller": "keep all (observed)", "setting": "", **scorer.score(keep_all)})
-    baseline = pd.read_parquet(rp.PROJECT_ROOT / "data" / "processed" / f"baseline_test_predictions_{TARGET}.parquet")
-    expected = scorer.score_metrics(baseline["y_true"].to_numpy(), baseline["y_score"].to_numpy())["roc_auc"]
-    assert abs(rows[0]["roc_auc"] - expected) < 1e-9, (rows[0]["roc_auc"], expected)
-    rows.append({"controller": "keep none", "setting": "", **scorer.score(pd.Series(False, index=opps.index))})
-    for months, days in [("6-month", 182), ("12-month", 365)]:
-        rows.append({"controller": "fixed interval", "setting": months, **scorer.score(fixed_interval_keep(opps, days))})
-
-    for tau in TAUS:
-        keep = threshold_policy(opps, scorer.risk_fn, tau)
-        rows.append({"controller": "threshold", "setting": f"tau={tau}", **scorer.score(keep)})
-        randoms = pd.DataFrame([scorer.score(random_keep(opps, int(keep.sum()), seed)) for seed in RANDOM_SEEDS])
-        row = {"controller": "random (matched)", "setting": f"matched to tau={tau}", **randoms.mean().to_dict()}
-        row.update({f"{m}_sd": randoms[m].std() for m in ["roc_auc", "brier"]})
-        rows.append(row)
-        print(f"  tau {tau}: kept {int(keep.sum()):,} | threshold AUROC {rows[-2]['roc_auc']:.4f} "
-              f"| random {row['roc_auc']:.4f} +/- {row['roc_auc_sd']:.4f} | {time.perf_counter() - start:.0f}s")
-
-    table = pd.DataFrame(rows)
+    table = run_frontier(scorer)
     rp.save_metrics(table, rp.TABLES_DIR / "scheduling_frontier_masking.csv")
     plot_frontier(table)
     show = ["controller", "setting", "share_of_observed", "spend_per_patient_year", "roc_auc", "brier",
