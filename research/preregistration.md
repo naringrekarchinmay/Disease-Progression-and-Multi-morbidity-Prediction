@@ -81,3 +81,4 @@ Any change after this commit is listed here with its date and reason, before res
 
 | Date | Change | Reason |
 |---|---|---|
+| 2026-11-09 | Added a supplementary interval: a t interval over the three replicates (`wins_by_replicate_interval`), reported next to the pre-registered rule, which is unchanged. | After the run, the patient-level bootstrap CIs (about +/- $5) proved far narrower than the spread between replicates (SD $3 to $100), because the bootstrap leaves out the variance of retraining the learned policy. Added after seeing results, so it is labelled supplementary. |

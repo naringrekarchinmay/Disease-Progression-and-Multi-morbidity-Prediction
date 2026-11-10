@@ -25,6 +25,7 @@ import time
 
 import numpy as np
 import pandas as pd
+from scipy.stats import t as t_dist
 
 import run_pipeline as rp
 from research import simulator as sim
@@ -135,8 +136,12 @@ def primary_outcome(frames: list[pd.DataFrame], lam: float, lipid: bool, seed: i
     draws = np.array([diff[rng.integers(0, n, n)].mean() for _ in range(N_BOOT)])
     lo, hi = np.percentile(draws, [100 * ALPHA / 2, 100 * (1 - ALPHA / 2)])
     per_rep = [values(f, f"FQI {lam:g}", lam, lipid).mean() - values(f, best, lam, lipid).mean() for f in frames]
+    sd = float(np.std(per_rep, ddof=1)) if len(per_rep) > 1 else np.nan
+    # Supplementary, added after the run (see the Deviations table): a t interval over replicates, which
+    # includes the variance of retraining the policy that the patient bootstrap leaves out.
+    rep_low = float(np.mean(per_rep) - t_dist.ppf(1 - ALPHA / 2, len(per_rep) - 1) * sd / np.sqrt(len(per_rep)))
     return {"best_fixed": best, "learned_minus_best": float(diff.mean()), "ci_low": float(lo), "ci_high": float(hi),
-            "replicate_sd": float(np.std(per_rep, ddof=1)) if len(per_rep) > 1 else np.nan,
+            "replicate_sd": sd, "replicate_ci_low": rep_low, "wins_by_replicate_interval": bool(rep_low > 0),
             "learned_value": float(pooled[f"FQI {lam:g}"].mean()), "best_fixed_value": float(pooled[best].mean()),
             "adaptive_wins": bool(lo > 0), "n_replicates": len(frames)}
 
@@ -174,11 +179,13 @@ def analyze() -> pd.DataFrame:
     return table
 
 
-def robust_region(table: pd.DataFrame, reward: str = "all conditions") -> pd.DataFrame:
-    """Pre-registered rule 2: adaptive wins at every W and lag level for that beta and lambda."""
+def robust_region(table: pd.DataFrame, reward: str = "all conditions", rule: str = "adaptive_wins") -> pd.DataFrame:
+    """Pre-registered rule 2: adaptive wins at every W and lag level for that beta and lambda.
+
+    rule="wins_by_replicate_interval" applies the supplementary replicate-based interval instead.
+    """
     t = table[table["reward"] == reward]
-    grid = t.pivot_table(index="beta", columns="lambda", values="adaptive_wins", aggfunc="all")
-    return grid
+    return t.pivot_table(index="beta", columns="lambda", values=rule, aggfunc="all")
 
 
 def main() -> None:
@@ -196,9 +203,10 @@ def main() -> None:
         main_rows = table[table["reward"] != "break-even vs never"]
         with pd.option_context("display.width", 250, "display.max_rows", 400):
             print(main_rows.drop(columns=["learned_value", "best_fixed_value"]).round(1).to_string(index=False))
-            for reward in ("all conditions", "without hyperlipidemia"):
-                print(f"\nRobust region ({reward}): adaptive wins at every W and lag level")
-                print(robust_region(table, reward).to_string())
+            for rule in ("adaptive_wins", "wins_by_replicate_interval"):
+                for reward in ("all conditions", "without hyperlipidemia"):
+                    print(f"\nRobust region ({reward}, {rule}): adaptive wins at every W and lag level")
+                    print(robust_region(table, reward, rule).to_string())
         return
 
     out_dir = rp.PROJECT_ROOT / args.out if args.out else OUT_DIR
