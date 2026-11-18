@@ -196,10 +196,17 @@ def train(
     patience: int = 4,
     batch_size: int = 256,
     lr: float = 1e-3,
+    weight_decay: float = 1e-5,
+    epoch_callback=None,
+    verbose: bool = True,
 ) -> tuple[TimeDecayGRU, pd.DataFrame]:
-    """Adam with early stopping on validation log loss; returns the best-epoch model."""
+    """Adam with early stopping on validation log loss; returns the best-epoch model.
+
+    `epoch_callback(epoch, val_loss)` runs after each epoch (the hyperparameter search uses it
+    to report to Optuna's pruner, which stops a trial by raising from inside it).
+    """
     generator = torch.Generator().manual_seed(seed)
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=1e-5)
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
     loss_fn = nn.BCEWithLogitsLoss()
     y_train_t = torch.as_tensor(y_train, dtype=torch.float32)
     y_val_t = torch.as_tensor(y_val, dtype=torch.float32)
@@ -218,7 +225,10 @@ def train(
         p_val = torch.as_tensor(predict_proba(model, val_tensors)).clamp(1e-6, 1 - 1e-6)
         val_loss = nn.functional.binary_cross_entropy(p_val, y_val_t).item()
         history.append({"epoch": epoch, "train_loss": total / len(order), "val_loss": val_loss})
-        print(f"  epoch {epoch:2d}  train {total / len(order):.4f}  val {val_loss:.4f}")
+        if verbose:
+            print(f"  epoch {epoch:2d}  train {total / len(order):.4f}  val {val_loss:.4f}")
+        if epoch_callback is not None:
+            epoch_callback(epoch, val_loss)
         if val_loss < best_loss - 1e-4:
             best_loss, best_state, stale = val_loss, copy.deepcopy(model.state_dict()), 0
         else:

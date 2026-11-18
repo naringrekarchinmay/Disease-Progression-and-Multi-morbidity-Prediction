@@ -14,3 +14,4 @@ lifelines>=0.27
 pytest>=8.0
 
 torch>=2.4
+optuna>=4.0
