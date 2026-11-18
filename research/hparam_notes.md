@@ -84,7 +84,46 @@ only, run after the torch module).
 
 ## 2. Results
 
-(filled in after the runs)
+Run 2026-11-17. The torch search and refits took 25 min with 10 threads, and the XGBoost search took 2 min.
+Trial 0 reproduced the task 24 GRU default exactly (validation log loss 0.4941).
+
+**Search** (validation log loss, raw output; lower is better):
+
+| Model | Default (trial 0) | Best | Best trial | Pruned | Best configuration |
+|---|---|---|---|---|---|
+| XGBoost (unweighted) | 0.4901 | 0.4866 | 25 | 0 / 50 | 1,166 trees, depth 6, lr 0.0068, subsample 0.95, colsample 0.43, min_child_weight 2.4, lambda 0.11 |
+| GRU | 0.4941 | 0.4917 | 45 | 18 / 50 | embed 32, hidden 32, dropout 0.03, lr 0.0077, wd 5.7e-6, batch 128 |
+| Transformer | 0.5062 | 0.4945 | 31 | 15 / 50 | dim 32, 2 heads, 1 layer, dropout 0.001, lr 0.0029, wd 8.1e-6, batch 256 |
+
+Both sequence models ended up *smaller* than their defaults, with almost no dropout. The Transformer
+shrank from 2 layers of width 64 to 1 layer of width 32. On about 25,000 fit patients the extra capacity was not
+helping. Three best values sit at or near an edge of their range: GRU hidden 32 (smallest option),
+GRU lr 0.0077 (the upper bound is 0.01) and Transformer dropout 0.001 (the lower bound is 0). The validation gains are small
+(0.0024 for the GRU), so we did not widen the ranges. Changing the space now would be a post-hoc change.
+
+**Tuned Table 1** (test split, seed 42, 95% patient-level bootstrap CI; `outputs/tables/table1_tuned_bootstrap_ci.csv`):
+
+| Model | AUROC default | AUROC tuned | Tuned - default | Brier default | Brier tuned |
+|---|---|---|---|---|---|
+| XGBoost + isotonic | 0.8276 | 0.8286 [0.8210, 0.8361] | +0.0010 [-0.0006, 0.0026], DeLong p 0.23 | 0.1670 | 0.1661 |
+| GRU | 0.8207 | 0.8222 [0.8142, 0.8296] | +0.0015 [-0.0003, 0.0032], p 0.09 | 0.1702 | 0.1694 |
+| Transformer | 0.8128 | 0.8193 [0.8115, 0.8267] | +0.0065 [0.0037, 0.0091], p < 0.001 | 0.1743 | 0.1709 |
+
+Paired differences between tuned models: XGBoost - GRU 0.0064 [0.0034, 0.0096] (DeLong p < 0.001);
+XGBoost - Transformer 0.0094 [0.0058, 0.0128]; GRU - Transformer 0.0030 [0.0008, 0.0053].
+Over five seeds (`table1_tuned_seeds.csv`) XGBoost - GRU ranges 0.0056 to 0.0080 and XGBoost - Transformer
+0.0093 to 0.0107. Every seed has DeLong p < 0.001. Tuned XGBoost's seed SD is 0.0001.
+
+**RQ1 decision (pre-registered rule).** The better tuned sequence model is the GRU. D = 0.0064 [0.0034,
+0.0096], entirely above 0, and D > 0 on 5 of 5 seeds. **RQ1's answer holds after tuning:** neither sequence
+model beats XGBoost. The task 24 gap (0.0069) barely moves, because tuning helped XGBoost and the GRU by
+about the same small amount.
+
+**What it means for the rest of the project.** Only the Transformer gained clearly from tuning (+0.0065). It
+still ranks last, so its default was under-tuned but its rank was not an artifact. Tuning did not
+significantly improve the default XGBoost (+0.0010, CI spans 0). So keeping the default XGBoost in Tables 2 and 3 and the
+simulator, as agreed for scope, costs at most about 0.001 AUROC. The tuned XGBoost row also mixes two
+changes, unweighted training and new settings, so the +0.0010 is an upper bound on what the settings alone add.
 
 ## 3. Deviations from section 1
 

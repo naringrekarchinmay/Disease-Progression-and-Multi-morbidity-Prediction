@@ -48,8 +48,8 @@ def xgboost_seed_predictions() -> None:
                       "y_score": calibrated.predict_proba(X_test)[:, 1]}).to_parquet(path, index=False)
 
 
-def load_predictions(seed: int) -> tuple[np.ndarray, dict[str, np.ndarray]]:
-    frames = {m: pd.read_parquet(predictions_path(m, seed)).set_index("patient_id") for m in MODELS}
+def load_predictions(seed: int, path_fn=predictions_path) -> tuple[np.ndarray, dict[str, np.ndarray]]:
+    frames = {m: pd.read_parquet(path_fn(m, seed)).set_index("patient_id") for m in MODELS}
     ids = frames["XGBoost"].index
     y = frames["XGBoost"]["y_true"].to_numpy()
     for m, f in frames.items():
