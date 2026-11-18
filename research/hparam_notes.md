@@ -97,9 +97,14 @@ Trial 0 reproduced the task 24 GRU default exactly (validation log loss 0.4941).
 
 Both sequence models ended up *smaller* than their defaults, with almost no dropout. The Transformer
 shrank from 2 layers of width 64 to 1 layer of width 32. On about 25,000 fit patients the extra capacity was not
-helping. Three best values sit at or near an edge of their range: GRU hidden 32 (smallest option),
-GRU lr 0.0077 (the upper bound is 0.01) and Transformer dropout 0.001 (the lower bound is 0). The validation gains are small
-(0.0024 for the GRU), so we did not widen the ranges. Changing the space now would be a post-hoc change.
+helping.
+
+**The sequence models' optimum sits at the capacity floor of the space.** The Transformer's best setting
+takes the smallest option for all three capacity parameters (dim 32, 2 heads, 1 layer). The GRU takes the
+smallest hidden size (32) and the smallest batch size (128). Two more values are near an edge: GRU lr 0.0077 (upper
+bound 0.01) and Transformer dropout 0.001 (lower bound 0). So the search may not have found the sequence
+models' best settings. A smaller network might do better still. We did not widen the ranges, because that
+would be a post-hoc change. A smaller-capacity run, if it is done, must be labelled supplementary.
 
 **Tuned Table 1** (test split, seed 42, 95% patient-level bootstrap CI; `outputs/tables/table1_tuned_bootstrap_ci.csv`):
 
@@ -121,11 +126,16 @@ about the same small amount.
 
 **What it means for the rest of the project.** Only the Transformer gained clearly from tuning (+0.0065). It
 still ranks last, so its default was under-tuned but its rank was not an artifact. Tuning did not
-significantly improve the default XGBoost (+0.0010, CI spans 0). So keeping the default XGBoost in Tables 2 and 3 and the
-simulator, as agreed for scope, costs at most about 0.001 AUROC. The tuned XGBoost row also mixes two
-changes, unweighted training and new settings, so the +0.0010 is an upper bound on what the settings alone add.
+significantly improve the default XGBoost (+0.0010, CI spans 0). The tuned row changes two things at once,
+unweighted training and new settings. A supplementary refit (section 3) splits the gain into +0.0006 from
+unweighting and +0.0004 from the settings, and neither is significant. On Table 1's data, then, keeping the default
+XGBoost for Tables 2 and 3 costs about 0.001 AUROC. That does **not** carry over to the simulator predictors (tasks 17
+onward). They use different features, they were never searched, and W7-2 found that noise lab columns hurt the
+untuned model there. The final report should say they remain untuned.
 
 ## 3. Deviations from section 1
 
 | Date | Change | Why |
 |---|---|---|
+| 2026-11-17 | The XGBoost search ran alongside the torch search, not after it. Its table step was re-run with `--skip-search` once the torch predictions existed. | Ordering only, to save time. Each search is seeded and reads the same splits, so the results are unaffected. |
+| 2026-11-17 | Supplementary, not in section 1: default XGBoost settings refitted **unweighted** + isotonic, seed 42. Test AUROC 0.8282 (weighted default 0.8276, tuned 0.8286). Unweighted - weighted +0.0006 [-0.0003, 0.0015]; tuned - unweighted default +0.0004 [-0.0012, 0.0021]. | Separates the two changes inside the tuned XGBoost row. Scratch script, not in the repo. |
